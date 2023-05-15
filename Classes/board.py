@@ -39,10 +39,10 @@ class Board():
                 self.player2.pieces.append(Stone(self.player2.player_number, index, key))    
                 index += 1
 
-        self.pieces_X = [player1.pieces]
+        self.pieces_X = self.player1.pieces
         self.pieces_in_X = self.pieces_X
         self.pieces_out_X = []
-        self.pieces_Y = [player2.pieces]
+        self.pieces_Y = self.player2.pieces
         self.pieces_in_Y = self.pieces_Y
         self.pieces_out_Y = []
 
@@ -122,8 +122,8 @@ class Board():
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 
 
-print(f'player1: {board.player1.name}')
-board.player1.list_pieces()
+# print(f'player1: {board.player1.name}')
+# board.player1.list_pieces()
 
 # print(board.player1.pieces[12])
 
