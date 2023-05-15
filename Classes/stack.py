@@ -1,4 +1,4 @@
-class Stack:
+class Stack():
     def __init__(self, items = None):
         self.__data = items if items else []
 

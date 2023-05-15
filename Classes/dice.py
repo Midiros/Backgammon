@@ -1,7 +1,7 @@
 from random import randint
 
 
-class Dice:
+class Dice():
     def __init__(self, sides=6):
         self.sides = sides
         self.value = None
