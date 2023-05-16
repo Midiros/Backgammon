@@ -153,9 +153,43 @@ class Board():
                 print(_, end='  ') #(f'{_}  ')
         print('|')
 
+
     def display_board(self):
         top_spikes = [13,14,15,16,17,18,19,20,21,22,23,24]
         bottom_spikes = [12,11,10,9,8,7,6,5,4,3,2,1]
+
+        # index pozice v commandline 2,6,10,14,18,22,26,30,34,38,42,46,50 kazda pozice je X/O hrac 1/2
+        top_position_index = {
+            '13': 2,
+            '14': 6,
+            '15': 10,
+            '16': 14,
+            '17': 18,
+            '18': 22,
+            '19': 30,
+            '20': 34,
+            '21': 38,
+            '22': 42,
+            '23': 46,
+            '24': 50,
+            # HORNI STRANA BOARDU
+        }
+
+        bottom_position_index = {
+            '12': 50,
+            '11': 46,
+            '10': 42,
+            '9': 38,
+            '8': 34,
+            '7': 30,
+            '6': 22,
+            '5': 18,
+            '4': 14,
+            '3': 10,
+            '2': 6,
+            '1': 2
+        }
+
         # musim alokovat spikes -1, protoze indexy zacinaji od 0
         for row in range(15):
             if row == 0 or row == 14:
@@ -168,7 +202,48 @@ class Board():
 
             print('|', end='')
             for column in range(51):
-                if(column in [23,24,25,26,27]):
+                if row in range(2,13):
+                    if(column == 23 or column == 27):
+                        print('|', end='')
+                    elif(column in range(24,27)):
+                        print(' ', end='')
+                    elif row == 7:
+                        print(' ', end='')
+                        continue
+                    elif column in top_position_index.values():
+                        for key, value in top_position_index.items():
+                            if value == column:
+                                
+                                #!TODO TEST PRO VYPSANI FIGUREK
+                                # if column == 22:
+                                #     print(int(key), end=' ')
+                                #     continue
+                                # elif column == 50:
+                                #     print(int(key), end=' ')
+                                #     continue
+                                # else:
+                                #     print(int(key), end='  ')
+                                
+                                if column == 22:
+                                    print(' X', end=' ')
+                                    continue
+                                elif column == 50:
+                                    print(' X', end=' ')
+                                    continue
+                                else:
+                                    print(' X', end='  ')
+                                
+
+
+                # elif column in bottom_position_index.values():
+                #     for key, value in bottom_position_index.items():
+                #         if value == column:
+                #             print(int(key), end='  ')
+
+                
+
+
+                elif(column in [23,24,25,26,27]):
                     if(column == 23 or column == 27):
                         print('|', end='')
                     elif(row == 7):
