@@ -6,7 +6,7 @@ class Stone():
             raise ValueError('Player number must be 1 or 2')
         elif stone_index not in range(15):
             raise ValueError('Stone index must be in range 0-14')
-        elif position not in range(24):
+        elif position not in range(0,24):
             raise ValueError('Position must be in range 0-23')
 
         self.player_number = player_number
@@ -45,11 +45,11 @@ class Stone():
         return (str(self.stone_index) + ' stone at position ' + str(self.position) + ' belongs to player' + str(self.player_number))
     
 
-sutr = Stone(2, 6, 0)
+# sutr = Stone(2, 6, 0)
 
-print(sutr)
-sutr.set_position(2)
-sutr.set_position(4)
-sutr.set_position(2)
-print(sutr.history)
+# print(sutr)
+# sutr.set_position(2)
+# sutr.set_position(4)
+# sutr.set_position(2)
+# print(sutr.history)
 
