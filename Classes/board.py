@@ -131,13 +131,18 @@ class Board():
                 print(_, end=' ') #(f'{_} ')
                 continue
             elif _ == spikes_side[6]:
-                print(f'|   |{_}', end='  ')
                 if len(str(_)) == 1:
+                    print(f'|   | {_}', end=' ')
                     print(' ', end='')
+                else:
+                    print(f'|   |{_}', end='  ')
                 continue
-            elif _ == spikes_side[5] and len(str(_)) == 1:
-                print(f'  {_}', end='')
-                continue    
+            elif _ == spikes_side[5]:
+                if len(str(_)) == 1:
+                    print(f' {_}', end=' ')
+                else:
+                    print(f'{_}', end=' ')
+                continue
             elif len(str(_)) == 1:
                 print(f' {_}', end='  ')
                 continue
@@ -152,18 +157,30 @@ class Board():
         top_spikes = [13,14,15,16,17,18,19,20,21,22,23,24]
         bottom_spikes = [12,11,10,9,8,7,6,5,4,3,2,1]
         # musim alokovat spikes -1, protoze indexy zacinaji od 0
-        for row in range(16):
-            if row == 0 or row == 15:
+        for row in range(15):
+            if row == 0 or row == 14:
                 self.print_border()
                 continue
             elif row == 2:
                 self.print_spikes_index(top_spikes)
-            elif row == 14:
+            elif row == 13:
                 self.print_spikes_index(bottom_spikes)
+
             print('|', end='')
             for column in range(51):
-                if(column == 23 or column == 27):
-                    print('|', end='')
+                if(column in [23,24,25,26,27]):
+                    if(column == 23 or column == 27):
+                        print('|', end='')
+                    elif(row == 7):
+                        if(column == 24):
+                            print('B', end='')
+                        elif(column == 25):
+                            print('A', end='')
+                        elif(column == 26):
+                            print('R', end='')
+                        continue
+                    else:
+                        print(' ', end='')
                 else:
                     print(' ', end='')
             print('|')
