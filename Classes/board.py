@@ -65,6 +65,31 @@ class Board():
     #     #         print(f'{key} klice => {i}. opakovani')
 
     #     return board
+    def _show_init_state(self):
+        # print out the initial state of the board
+        print('-------------------------')
+        print('INITIAL STATE OF THE BOARD')
+        print('-------------------------')
+        for i in range(24):
+            if self.spikes[i].is_empty():
+                print(f'Position {i} is empty')
+            else:
+                print(f'Position {i} has {len(self.spikes[i])} pieces')
+                print(f'Player {self.spikes[i].peek().player_number} has the top piece')
+        print('-------------------------')
+
+    def _show_state(self):
+        print('-------------------------')
+        print('CURRENT STATE OF THE BOARD')
+        print('-------------------------')
+        for i in range(24):
+            if self.spikes[i].is_empty():
+                print(f'Position {i} is empty')
+            else:
+                print(f'Position {i} has {len(self.spikes[i])} pieces')
+                print(f'Player {self.spikes[i].peek().player_number} has the top piece')
+        print('-------------------------')
+
 
     def piece_moved_out(self, piece, player_number):
         if(player_number == 1):
@@ -73,6 +98,7 @@ class Board():
         else:
             self.pieces_in_o.remove(piece)
             self.pieces_out_o.append(piece)
+
 
     def piece_finished(self, piece, player_number):
         pass
@@ -90,9 +116,59 @@ class Board():
         else:
             self.board[move_position] = 'O'
             
-        return self.board 
+        return self.board
+    
+    def print_border(self):
+        print('|-----------------------|---|-----------------------|')
 
+    def print_spikes_index(self, spikes_side) -> None:
+        print('|', end='')
+        for _ in spikes_side:
+            if(_ == 1):
+                print(f' {_}', end=' ')
+                continue
+            elif _ == spikes_side[-1]:
+                print(_, end=' ') #(f'{_} ')
+                continue
+            elif _ == spikes_side[6]:
+                print(f'|   |{_}', end='  ')
+                if len(str(_)) == 1:
+                    print(' ', end='')
+                continue
+            elif _ == spikes_side[5] and len(str(_)) == 1:
+                print(f'  {_}', end='')
+                continue    
+            elif len(str(_)) == 1:
+                print(f' {_}', end='  ')
+                continue
+            elif _ == spikes_side[5]:
+                print(f' {_}', end='')
+                continue    
+            else:
+                print(_, end='  ') #(f'{_}  ')
+        print('|')
 
+    def display_board(self):
+        top_spikes = [13,14,15,16,17,18,19,20,21,22,23,24]
+        bottom_spikes = [12,11,10,9,8,7,6,5,4,3,2,1]
+        # musim alokovat spikes -1, protoze indexy zacinaji od 0
+        for row in range(16):
+            if row == 0 or row == 15:
+                self.print_border()
+                continue
+            elif row == 2:
+                self.print_spikes_index(top_spikes)
+            elif row == 14:
+                self.print_spikes_index(bottom_spikes)
+            print('|', end='')
+            for column in range(51):
+                if(column == 23 or column == 27):
+                    print('|', end='')
+                else:
+                    print(' ', end='')
+            print('|')
+
+                
 
     #TODO - Prio
     #display board in cosole
@@ -107,8 +183,12 @@ class Board():
         pass
 
 
+# create a 2 dimensional array for the board (24 positions) based on the pieces positions
+
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 
+# board._show_init_state()
+board.display_board()
 
 # print(f'player1: {board.player1.name}')
 # board.player1.list_pieces()
