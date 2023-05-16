@@ -3,6 +3,7 @@ from stone import Stone
 from dice import Dice
 from player import Player
 from stack import Stack
+from spike import Spike
 
 class Board():
     def __init__(self, player1: Player, player2: Player):
@@ -14,7 +15,7 @@ class Board():
 
         # Vytvori 24 poli pro hraci desku
         for i in range(24):
-            self.spikes.append(Stack())
+            self.spikes.append(Spike(None, i))
 
         # for i in range(24):
         #     self.spikes.append(Stack())
@@ -31,10 +32,10 @@ class Board():
                                         '16': 3, 
                                         '18': 5}
         # player2_starter_positions = [5, 7, 12, 23]
-        player2_starter_positions = {   '5': 2,
-                                        '7': 5,
-                                        '12': 3,
-                                        '23': 5}
+        player2_starter_positions = {   '5': 5,
+                                        '7': 3,
+                                        '12': 5,
+                                        '23': 2}
 
         # Vytvori 15 figurek/kamenu pro hrace 1
         index = 0
@@ -212,7 +213,18 @@ class Board():
                         continue
                     elif column in top_position_index.values():
                         for key, value in top_position_index.items():
-                            if value == column:
+                            
+                            if column == 22:
+                                print(' X', end=' ')
+                                continue
+                            elif column == 50:
+                                print(' X', end=' ')
+                                continue
+                            for kamen in self.spikes[int(key)]:
+                                if value == column:
+                                    if kamen.get_position() == int(key):
+                                        print('X', end=' ')
+                                        continue
                                 
                                 #!TODO TEST PRO VYPSANI FIGUREK
                                 # if column == 22:
@@ -223,15 +235,8 @@ class Board():
                                 #     continue
                                 # else:
                                 #     print(int(key), end='  ')
-                                
-                                if column == 22:
-                                    print(' X', end=' ')
-                                    continue
-                                elif column == 50:
-                                    print(' X', end=' ')
-                                    continue
                                 else:
-                                    print(' X', end='  ')
+                                    print('  ', end='  ')
                                 
 
 
@@ -280,10 +285,30 @@ class Board():
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 
 # board._show_init_state()
-board.display_board()
+# board.display_board()
 
 # print(f'player1: {board.player1.name}')
 # board.player1.list_pieces()
+
+
+# ////////////////////
+
+
+#FIXME PLAYER1
+
+# board.spikes[0].list_of_stones()
+# board.spikes[11].list_of_stones()
+# board.spikes[16].list_of_stones()
+# board.spikes[18].list_of_stones()
+
+
+#FIXME PLAYER2
+board.spikes[5].list_of_stones()
+board.spikes[7].list_of_stones()
+board.spikes[12].list_of_stones()
+board.spikes[23].list_of_stones()
+
+# ////////////////////
 
 # index = 0
 # for piece in board.pieces_X:
