@@ -16,9 +16,11 @@ class Stone():
         self.history.push(position) # Pri vytvoreni kamene, prida startovni pozici
 
 
-    def player_number(self):
+    def owner(self) -> int:
         return self.player_number
     
+
+
     def stone_index(self) -> int:
         return self.stone_index    
 

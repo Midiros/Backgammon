@@ -1,25 +1,26 @@
 class Spike():
     def __init__(self, items = None, index = None):
         self.__data = items if items else []
+        self.index = index
 
     def push(self, item):
         self.__data.append(item)
 
     def pop(self):
-        if self.is_empty():
-            print('Stack is empty')
-            return None
-        else:
-            return self.__data.pop()
+        return self.__data.pop()
+        
+    def my_index(self):
+        return self.index
 
     def peek(self):
-        if self.is_empty():
-            print('Stack is empty')
-        else:
+        if self.__data:
             return self.__data[-1]
-
+        else:
+            return None
+    
+    
     def is_empty(self):
-        return len(self.__data) == 0
+        return not self.__data
 
     def __len__(self):
         return len(self.__data)

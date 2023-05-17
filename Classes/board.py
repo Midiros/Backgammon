@@ -3,6 +3,7 @@ from stone import Stone
 from dice import Dice
 from player import Player
 from stack import Stack
+from spike import Spike
 
 class Board():
     def __init__(self, player1: Player, player2: Player):
@@ -14,7 +15,7 @@ class Board():
 
         # Vytvori 24 poli pro hraci desku
         for i in range(24):
-            self.spikes.append(Stack())
+            self.spikes.append(Spike())
 
         # for i in range(24):
         #     self.spikes.append(Stack())
@@ -33,8 +34,8 @@ class Board():
         # player2_starter_positions = [5, 7, 12, 23]
         player2_starter_positions = {   '5': 2,
                                         '7': 5,
-                                        '12': 3,
-                                        '23': 5}
+                                        '12': 5,
+                                        '23': 2}
 
         # Vytvori 15 figurek/kamenu pro hrace 1
         index = 0
@@ -67,28 +68,28 @@ class Board():
     #     return board
     def _show_init_state(self):
         # print out the initial state of the board
-        print('-------------------------')
+        print('                       --')
         print('INITIAL STATE OF THE BOARD')
-        print('-------------------------')
+        print('                       --')
         for i in range(24):
             if self.spikes[i].is_empty():
                 print(f'Position {i} is empty')
             else:
                 print(f'Position {i} has {len(self.spikes[i])} pieces')
                 print(f'Player {self.spikes[i].peek().player_number} has the top piece')
-        print('-------------------------')
+        print('                       --')
 
     def _show_state(self):
-        print('-------------------------')
+        print('                       --')
         print('CURRENT STATE OF THE BOARD')
-        print('-------------------------')
+        print('                       --')
         for i in range(24):
             if self.spikes[i].is_empty():
                 print(f'Position {i} is empty')
             else:
                 print(f'Position {i} has {len(self.spikes[i])} pieces')
                 print(f'Player {self.spikes[i].peek().player_number} has the top piece')
-        print('-------------------------')
+        print('                       --')
 
 
     def piece_moved_out(self, piece, player_number):
@@ -119,150 +120,130 @@ class Board():
         return self.board
     
     def print_border(self):
-        print('|-----------------------|---|-----------------------|')
-
-    def print_spikes_index(self, spikes_side) -> None:
-        print('|', end='')
-        for _ in spikes_side:
-            if(_ == 1):
-                print(f' {_}', end=' ')
-                continue
-            elif _ == spikes_side[-1]:
-                print(_, end=' ') #(f'{_} ')
-                continue
-            elif _ == spikes_side[6]:
-                if len(str(_)) == 1:
-                    print(f'|   | {_}', end=' ')
-                    print(' ', end='')
-                else:
-                    print(f'|   |{_}', end='  ')
-                continue
-            elif _ == spikes_side[5]:
-                if len(str(_)) == 1:
-                    print(f' {_}', end=' ')
-                else:
-                    print(f'{_}', end=' ')
-                continue
-            elif len(str(_)) == 1:
-                print(f' {_}', end='  ')
-                continue
-            elif _ == spikes_side[5]:
-                print(f' {_}', end='')
-                continue    
-            else:
-                print(_, end='  ') #(f'{_}  ')
-        print('|')
-
+        print('|                       |---|                       |')
 
     def display_board(self):
         top_spikes = [13,14,15,16,17,18,19,20,21,22,23,24]
         bottom_spikes = [12,11,10,9,8,7,6,5,4,3,2,1]
+        top_spikes_indexes = [12,13,14,15,16,17,18,19,20,21,22,23]
+        bottom_spikes_indexes = [11,10,9,8,7,6,5,4,3,2,1,0]
 
         # index pozice v commandline 2,6,10,14,18,22,26,30,34,38,42,46,50 kazda pozice je X/O hrac 1/2
-        top_position_index = {
-            '13': 2,
-            '14': 6,
-            '15': 10,
-            '16': 14,
-            '17': 18,
-            '18': 22,
-            '19': 30,
-            '20': 34,
-            '21': 38,
-            '22': 42,
-            '23': 46,
-            '24': 50,
-            # HORNI STRANA BOARDU
-        }
+        # top_position_index = {
+        #     '13': 2,
+        #     '14': 6,
+        #     '15': 10,
+        #     '16': 14,
+        #     '17': 18,
+        #     '18': 22,
+        #     '19': 30,
+        #     '20': 34,
+        #     '21': 38,
+        #     '22': 42,
+        #     '23': 46,
+        #     '24': 50,
+        #     # HORNI STRANA BOARDU
+        # }
 
-        bottom_position_index = {
-            '12': 50,
-            '11': 46,
-            '10': 42,
-            '9': 38,
-            '8': 34,
-            '7': 30,
-            '6': 22,
-            '5': 18,
-            '4': 14,
-            '3': 10,
-            '2': 6,
-            '1': 2
-        }
+        # bottom_position_index = {
+        #     '12': 50,
+        #     '11': 46,
+        #     '10': 42,
+        #     '9': 38,
+        #     '8': 34,
+        #     '7': 30,
+        #     '6': 22,
+        #     '5': 18,
+        #     '4': 14,
+        #     '3': 10,
+        #     '2': 6,
+        #     '1': 2
+        # }
 
-        # musim alokovat spikes -1, protoze indexy zacinaji od 0
-        for row in range(15):
-            if row == 0 or row == 14:
-                self.print_border()
+        #FIXME - MAIN BOARD
+        board.print_border()
+        board.print_spike_indexes(top_spikes)
+
+        board.print_playfield(top_spikes_indexes)
+
+        board.print_middle_bar_row()
+        
+        board.print_playfield(bottom_spikes_indexes)
+
+        board.print_spike_indexes(bottom_spikes)
+        board.print_border()
+
+
+
+
+    def print_playfield(self, spikes_side) -> None:
+        counter = 0
+        spike_index_counter = 0
+        for row_index in range(5):
+            if row_index == 6:
                 continue
-            elif row == 2:
-                self.print_spikes_index(top_spikes)
-            elif row == 13:
-                self.print_spikes_index(bottom_spikes)
-
-            print('|', end='')
-            for column in range(51):
-                if row in range(2,13):
-                    if(column == 23 or column == 27):
-                        print('|', end='')
-                    elif(column in range(24,27)):
-                        print(' ', end='')
-                    elif row == 7:
-                        print(' ', end='')
-                        continue
-                    elif column in top_position_index.values():
-                        for key, value in top_position_index.items():
-                            if value == column:
-                                #!TODO TEST PRO VYPSANI FIGUREK
-                                # if column == 22:
-                                #     print(int(key), end=' ')
-                                #     continue
-                                # elif column == 50:
-                                #     print(int(key), end=' ')
-                                #     continue
-                                # else:
-                                #     print(int(key), end='  ')
-                                
-                                if column == 22:
-                                    print(' X', end=' ')
-                                    continue
-                                elif column == 50:
-                                    print(' X', end=' ')
-                                    continue
-                                else:
-                                    print(' X', end='  ')
-                                
-
-
-                # elif column in bottom_position_index.values():
-                #     for key, value in bottom_position_index.items():
-                #         if value == column:
-                #             print(int(key), end='  ')
-
-                
-
-
-                elif(column in [23,24,25,26,27]):
-                    if(column == 23 or column == 27):
-                        print('|', end='')
-                    elif(row == 7):
-                        if(column == 24):
-                            print('B', end='')
-                        elif(column == 25):
-                            print('A', end='')
-                        elif(column == 26):
-                            print('R', end='')
-                        continue
-                    else:
-                        print(' ', end='')
+            counter += 1
+            for spike_index in range(0,6):
+                spike_index_counter += 1
+                current_spike_index = spikes_side[spike_index]
+                current_spike = board.spikes[current_spike_index]
+                if not(board.spikes[current_spike_index].is_empty()):
+                    print('X', end='')
                 else:
-                    print(' ', end='')
-            print('|')
+                    print('O', end='')
 
-                
+                # if current_spike_index < row_index:
+                #     if current_spike.peek() == 1:
+                #         print('X', end='')
+                #     else:
+                #         print('O', end='')
+                # else:
+                #     print(' ', end='')
+            board.print_bar()
+            for spike_index in range(5, 11):
+                spike_index_counter += 1
+                current_spike_index = spikes_side[spike_index]
+                current_spike = board.spikes[current_spike_index]
+                if not(board.spikes[current_spike_index].is_empty()):
+                    print('X', end='')
+                else:
+                    print(' ', end=' ')
+
+                # if current_spike_index < row_index:
+                #     if board.spikes[current_spike_index].peek() == 1:
+                #         print('X', end='')
+                #     else:
+                #         print('O', end='')
+                # else:
+                #     print(' ', end='')
+            print('|')
+        # print('counter: ', counter)
+        # print('spikes_index counter: ', spike_index_counter)
+
+
+    def print_middle_bar_row(self):
+        print('|                       |BAR|                       |')
+
+
+
+
+    def print_spike_indexes(self, spikes_side):
+        for column in range(0, 6):
+            print(f'  {spikes_side[column] }', end='')
+        board.print_bar()
+        for column in range(6, 12):
+            print(f'  {spikes_side[column] }', end='')
+        print('|')
+
+
+
+
 
     #TODO - Prio
     #display board in cosole
+
+    def print_bar(self):
+        print('|   |', end='')
 
 
     #TODO   
@@ -274,12 +255,19 @@ class Board():
         pass
 
 
+
+
 # create a 2 dimensional array for the board (24 positions) based on the pieces positions
 
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 
 # board._show_init_state()
 board.display_board()
+#!TEST
+# for index,spike in enumerate(board.spikes):
+#     if(len(spike)) > 0:
+#         print(index, end=' ')
+#         print(len(spike))
 
 # print(f'player1: {board.player1.name}')
 # board.player1.list_pieces()
