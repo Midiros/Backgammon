@@ -1,3 +1,5 @@
+from stone import Stone
+
 class Spike():
     def __init__(self, items = None, index = None):
         self.__data = items if items else []
@@ -14,6 +16,7 @@ class Spike():
 
     def peek(self):
         if self.__data:
+            # print(self.__data[-1])
             return self.__data[-1]
         else:
             return None
