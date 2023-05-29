@@ -120,7 +120,7 @@ class Board():
         return self.board
     
     def print_border(self):
-        print('|                       |---|                       |')
+        print('|                        |---|                        |')
 
     def display_board(self):
         top_spikes_indexes = [13,14,15,16,17,18,'BAR',19,20,21,22,23,24]
@@ -133,77 +133,62 @@ class Board():
         board.print_border()
         board.print_spike_indexes(top_spikes)
 
-        board.print_gameboard(top_spikes)
+        board.print_top_gameboard(top_spikes)
         # board.print_playfield(top_spikes_indexes)
 
         board.print_middle_bar_row()
         
-        board.print_gameboard(bottom_spikes)
+        board.print_bottom_gameboard(bottom_spikes)
         # board.print_playfield(bottom_spikes_indexes)
 
         board.print_spike_indexes(bottom_spikes)
         board.print_border()
 
 
-
-
-
-
-
-
-    def print_gameboard(self, spikes_side) -> None:
-        for row_index in range(5, 0, -1):
+    def print_top_gameboard(self, spikes_side) -> None:
+        for row_index in range(0, 5, 1):
             print('|', end='')
             for spike_positions_index, spike in enumerate(spikes_side):
                 if spike_positions_index == 6:
                     board.print_bar()
                     continue
 
-                # current_spike_index = spike
-                # print(f'current spike index {spike}')
-                # print(f'SPIKE INDEX {spike_positions_index}', end='  ')
-                # print(len(board.spikes[spike-1]))
-                
-                # CHECKUJ ROW LENGTH A POROVNAVNEJ S LEN SPIKEM ROZDIL
-                
-
                 if not board.spikes[spike].is_empty():
-                    if len(board.spikes[spike]) >= row_index and spikes_side[0] == 12:
+                    if len(board.spikes[spike]) > row_index:
                         kamen = board.spikes[spike].peek()
                         if kamen.owner() == 1:
-                            print('  X ', end='')
+                            print(f"{'X':>4}", end='')
                         else:
-                            print('  O ', end='')
-                    elif len(board.spikes[spike]) >= row_index and spikes_side[0] == 11:
-                        kamen = board.spikes[spike].peek()
-                        if kamen.owner() == 1:
-                            print('  X ', end='')
-                        else:
-                            print('  O ', end='')
+                            print(f"{'O':>4}", end='')
+                    elif len(board.spikes[spike]) <= row_index:
+                        print(f"{'':>4}", end='')
+                        
                 else:
-                    print('   ', end='')
+                    print(f"{'':>4}", end='')
             print('|')
 
 
-    # def print_gameboard(self, spikes_side) -> None:
-    #     for row_index in range(0, 5):
-    #         for spike_index in range(0,13):
-    #             if spike_index == 6:
-    #                 board.print_bar()
-    #                 continue
-    #             current_spike_index = spikes_side[spike_index]
-    #             # print(current_spike_index)
-    #             # print(f'current spike index {current_spike_index}')
-    #             # print(f'SPIKE INDEX {spike_index}')
-    #             if not board.spikes[current_spike_index].is_empty():
-    #                     kamen = board.spikes[current_spike_index].peek()
-    #                     if kamen.owner() == 1:
-    #                         print('  X ', end='')
-    #                     else:
-    #                         print('  O ', end='')
-    #             else:
-    #                 print('   ', end='')
-    #         print('|')
+    def print_bottom_gameboard(self, spikes_side) -> None:
+        for row_index in range(5, 0, -1):
+            print('|', end='')
+            for spike_positions_index, spike in enumerate(spikes_side):
+                if spike_positions_index == 6:
+                    board.print_bar()
+                    continue       
+
+                if not board.spikes[spike].is_empty():
+                    if len(board.spikes[spike]) >= row_index:
+                        kamen = board.spikes[spike].peek()
+                        if kamen.owner() == 1:
+                            print(f"{'X':>4}", end='')
+                        else:
+                            print(f"{'O':>4}", end='')
+                    elif len(board.spikes[spike]) < row_index:
+                        print(f"{'':>4}", end='')
+
+                else:
+                    print(f"{'':>4}", end='')
+            print('|')
 
 
 # for index, spike in enumerate(board.spikes):
@@ -271,7 +256,7 @@ class Board():
 
 
     def print_middle_bar_row(self):
-        print('|                       |BAR|                       |')
+        print('|                        |BAR|                        |')
     
 
 
@@ -279,10 +264,10 @@ class Board():
     def print_spike_indexes(self, spikes_side):
         print('|', end='')
         for column in range(0, 6):
-            print(f'  {spikes_side[column] }', end='')
+            print(f'{spikes_side[column]:>4}', end='')
         board.print_bar()
         for column in range(7, 13):
-            print(f'  {spikes_side[column] }', end='')
+            print(f'{spikes_side[column]:>4}', end='')
         print('|')
 
 
