@@ -27,7 +27,7 @@ class Stone():
     def position(self) -> int:
         return self.position
 
-    def history(self) -> list[int]:
+    def history(self):
         return self.history
 
     def set_player_number(self, player_number) -> None:

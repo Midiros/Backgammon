@@ -34,3 +34,15 @@ class Spike():
     def list_of_stones(self):
         for kamen in self.__data:
             print(kamen)
+
+
+    #input hrac ktery chce krast
+    def isStealable(self, player_number):
+        if self.__data:
+            if self.__data[0].owner() != player_number and len(self.__data) < 2:
+                print('STEALABLE')
+                return True
+            print('NOT STEALABLE')
+            return False
+        print('SPIKE IS EMPTY')    
+        return False

@@ -21,3 +21,6 @@ class Bar():
             return self.player2_bar.pop()
         else:
             raise ValueError('Player number must be 1 or 2')
+        
+    def __len__(self):
+        return len(self.player1_bar)
