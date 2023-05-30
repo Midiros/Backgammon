@@ -286,40 +286,32 @@ board.display_board()
 
 
 
-print(len(board.spikes[0]))
-
-
-print(board.player1.pieces[1])
-
-# board.movePiece(1, 0, 1)
-
-# board.movePiece(2, 5, 3)
-# board.addToBar(2, 3)
-
-# board.spikes[3].list_of_stones()
-# board.addToBar(2, 3)
-
-# print(board.player2.pieces[1])
-
-# hovno = board.player1.pieces[1].history
-
-# print(hovno)
-# board.movePiece(2, 23, 22)
 
 
 
-board.spikes[1].isStealable(2)
+
+
+
+
 board.addToBar(1,0)
 board.addToBar(1,0)
+board.addToBar(1,11)
+
+
 
 board.addToBar(2,23)
 board.addToBar(2,23)
+board.addToBar(2,5)
+board.addToBar(2,5)
+
+
 
 print(f'Delka baru hrace2: {len(board.player2.bar)}')
 print(f'Delka baru hrace1: {len(board.player1.bar)}')
 
 board.spikes[23].isStealable(1)
 board.spikes[0].isStealable(2)
+board.spikes[1].isStealable(2)
 
 board.display_board()
 

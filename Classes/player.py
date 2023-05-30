@@ -39,7 +39,7 @@ class Player():
         return self.dice.value
     
     def add_piece_to_bar(self, stone):
-        self.bar.add_to_bar(self.player_number, stone)
+        self.bar.add_to_bar(stone)
         print(f'added {stone} to bar')
         stone.add_to_history(-1)
     
