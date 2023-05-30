@@ -19,6 +19,7 @@ class Board():
 
         # for i in range(24):
         #     self.spikes.append(Stack())
+        
 
         
         #!  CISTE PRO TESTING
@@ -58,12 +59,29 @@ class Board():
         self.pieces_Y = self.player2.pieces
         self.pieces_in_Y = self.pieces_Y
         self.pieces_out_Y = []
+        
 
     #     #!TEST
     #     # for key, value in player1_starter_positions.items():
     #     #     print(f'key: {key}')
     #     #     for i in range(value):
     #     #         print(f'{key} klice => {i}. opakovani')
+
+
+
+    def add_to_bar(self, player, stone):
+        if player == 1:
+            self.player1.pieces[stone].position = -1
+            self.player1.bar.add_to_bar(player, stone)
+            board.spikes[stone.position].pop()
+            # print(f'Player 1: {len(self.player1.pieces)}', end='')
+            # print(f'kamen {self.player1.pieces[stone.stone_index]} byl presunut do baru')
+        elif player == 2:
+            self.player2.pieces[stone].position = -1
+            self.player2.bar.add_to_bar(player, stone)
+            board.spikes[stone.position].pop()
+            # print(f'Player 2: {len(self.player2.pieces)}', end='')
+            # print(f'kamen {self.player2.pieces[stone.stone_index]} byl presunut do baru')
 
     #     return board
     def _show_init_state(self):
@@ -191,21 +209,6 @@ class Board():
             print('|')
 
 
-# for index, spike in enumerate(board.spikes):
-#     if len(spike) > 0:
-#         print(index, end=' ')
-#         print(len(spike))
-#         kamen = spike.peek()
-#         print(kamen.owner())
-
-
-
-
-
-
-
-
-
     def print_playfield(self, spikes_side) -> None:
         for row_index in range(5):
             # counter += 1
@@ -274,6 +277,7 @@ class Board():
 
 
 
+
     #TODO - Prio
     #display board in cosole
 
@@ -290,6 +294,16 @@ class Board():
         pass
 
 
+    def movePiece(self, player, originSpike, targetSpike):
+        if player == 1:
+            piece = self.spikes[originSpike].pop()
+            self.player1.move_piece(piece, targetSpike)
+            self.spikes[targetSpike].push(piece)
+        elif player == 2:
+            piece = self.spikes[originSpike].pop()
+            self.player2.move_piece(piece, targetSpike)
+            self.spikes[targetSpike].push(piece)
+
 
 
 # create a 2 dimensional array for the board (24 positions) based on the pieces positions
@@ -298,6 +312,47 @@ board = Board(Player('Petr', 1), Player('Jirka', 2))
 
 # board._show_init_state()
 board.display_board()
+
+
+print(len(board.spikes[0]))
+    
+board.player1.add_piece_to_bar(board.player1.pieces[1])
+
+
+print(board.player1.pieces[1])
+
+print(len(board.spikes[0]))
+
+
+
+board.movePiece(1, 0, 1)
+board.movePiece(1, 0, 1)
+
+board.movePiece(2, 5, 3)
+board.movePiece(2, 5, 3)
+board.movePiece(2, 5, 3)
+board.movePiece(2, 5, 3)
+
+
+board.display_board()
+
+
+
+
+
+
+
+# board.player1.move_piece(3, 3)
+# board.player1.add_piece_to_bar(board.player1.pieces[3])
+# board.player1.move_piece(3, 5)
+
+
+# board.add_to_bar(1, board.player1.pieces[3])
+# print(board.player1.pieces[3])
+# board.player1.move_piece(3, 3)
+# board.player1.move_piece(3, 5)
+# board.add_to_bar(1, board.player1.pieces[0])
+# board.player1.roll_dice()
 #!TEST
 # for index,spike in enumerate(board.spikes):
 #     if(len(spike)) > 0:

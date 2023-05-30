@@ -1,5 +1,6 @@
 from dice import Dice
 from stone import Stone
+from bar import Bar
 
 class Player():
     # player1_positions = [0, 0, 11, 11, 11, 11, 11, 16, 16, 16, 18, 18, 18, 18, 18]
@@ -12,8 +13,9 @@ class Player():
         self.player_number = player_number
         self.dice = Dice()
         self.score = 0
-        self.pieces = []      
         # self.pieces_out = []
+        self.pieces = []
+        self.bar = Bar()
         # self.pieces_in = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14] # Na zacatku hry je vsech 15 figurek v poli
         # self.generate_pieces()
 
@@ -27,14 +29,18 @@ class Player():
     #             self.pieces.append(Stone(self.player_number, i, self.player2_positions[i]))
                 
 
-    def move_piece(self, piece, move_position):
-        piece.set_position(move_position)
-        piece.add_to_history(move_position)
-        print(piece.history)
+    def move_piece(self, stone, move_position):
+        # print(piece)
+        stone.set_position(move_position)
+        # print(piece.history)
 
     def roll_dice(self):
         self.dice.roll()
         return self.dice.value
+    
+    def add_piece_to_bar(self, stone):
+        self.bar.add_to_bar(self.player_number, stone)
+        stone.add_to_history(-1)
     
     def list_pieces(self):
         for piece in self.pieces:

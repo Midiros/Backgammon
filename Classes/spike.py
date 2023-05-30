@@ -9,7 +9,7 @@ class Spike():
         self.__data.append(item)
 
     def pop(self):
-        return self.__data.pop()
+        return self.__data.pop(-1)
         
     def my_index(self):
         return self.index

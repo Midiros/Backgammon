@@ -12,8 +12,8 @@ class Stone():
         self.player_number = player_number
         self.stone_index = stone_index
         self.position = position
-        self.history = Stack()
-        self.history.push(position) # Pri vytvoreni kamene, prida startovni pozici
+        self.history = []
+        self.history.append(position) # Pri vytvoreni kamene, prida startovni pozici
 
 
     def owner(self) -> int:
@@ -41,7 +41,7 @@ class Stone():
         return self.position
 
     def add_to_history(self, position) -> None:
-        self.history.push(position)
+        self.history.append(position)
 
     def __str__(self):
         return (str(self.stone_index) + ' stone at position ' + str(self.position) + ' belongs to player' + str(self.player_number))
