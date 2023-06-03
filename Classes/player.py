@@ -1,6 +1,7 @@
 from dice import Dice
 from stone import Stone
 from bar import Bar
+from spike import Spike
 
 class Player():
     # player1_positions = [0, 0, 11, 11, 11, 11, 11, 16, 16, 16, 18, 18, 18, 18, 18]
@@ -16,6 +17,7 @@ class Player():
         # self.pieces_out = []
         self.pieces = []
         self.bar = Bar()
+        self.diceValues = []
         # self.pieces_in = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14] # Na zacatku hry je vsech 15 figurek v poli
         # self.generate_pieces()
 
@@ -55,4 +57,55 @@ class Player():
     
     def __str__(self):
         return self.name
+    
+    def choose_move(self, moves):
+        print(f'Available moves: {moves}')
+        move = int(input('Choose your move: '))
+        print(f'You chose {move}')
+        return move   
 
+    def moveSet(self, spikes):
+        moves = []
+        self.diceValues = self.dice.roll()
+        while len(self.diceValues) > 0:
+            moves = self.spikeOvertake(spikes)
+            move = self.choose_move(moves)
+            self.diceValues.remove(self.diceValues[move[]])
+        return moves
+
+
+    def spikeOvertake(self, allSpikes):
+        diceValues = self.diceValues
+        moves = []
+        while len(diceValues) > 0:
+            for currentSpike in allSpikes:
+                # currentSpike.list_of_stones()
+                # print(len(currentSpike))
+                if currentSpike.is_empty():
+                    # print(currentSpike.my_index())
+                    # print('empty')
+                    # pokud spike je prazdny, tak se preskakuje protoze na nem nejsou kameny ktere lze posouvat
+                    continue
+                
+
+                elif currentSpike.peek().owner() == self.player_number:
+                    # print(currentSpike.my_index(), end=' ')
+                    # print(f'owned by player{self.player_number}')
+                    for diceValue in diceValues:
+                        # print(f'Hod kostkou {diceValue}')
+                        spikeIndex = currentSpike.my_index()
+                        # print(f'Start index{spikeIndex}')
+                        if spikeIndex + diceValue < 24:
+                            if allSpikes[currentSpike.my_index() + diceValue].is_empty() or allSpikes[currentSpike.my_index() + diceValue].peek().owner == self.player_number:
+                                # print('overtake', end='')
+                                # print(f' Target spike {spikeIndex + diceValue}')
+                                moves.append([currentSpike.my_index(), currentSpike.my_index() + diceValue])
+                            else:
+                                # print('cant overtake')
+                                pass
+                            
+                        else:
+                            moves.append([currentSpike.my_index(), 99])
+        
+        return moves
+    
