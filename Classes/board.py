@@ -1,4 +1,6 @@
 import random
+from colorama import Fore, Back, Style
+
 from stone import Stone
 from dice import Dice
 from player import Player
@@ -131,82 +133,82 @@ class Board():
     def roll_dice(self):
         self.dice.roll()
         return self.dice.value
-    
+
     def print_border(self):
-        print('|                        |---|                          |')
+        print(Fore.GREEN + '|~~~~~~~~~~~~~~~~~~~~~~~~|~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~|' + Style.RESET_ALL)
 
 
 
     def print_top_gameboard(self, spikes_side) -> None:
         for row_index in range(0, 5, 1):
-            print('|', end='')
+            print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
             for spike_positions_index, spike in enumerate(spikes_side):
                 if spike_positions_index == 6:
-                    print('|', end='')
+                    print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
                     if len(board.player1.bar) > row_index:
-                        print(f"{'X':^3}", end='')
+                        print(Fore.RED + f"{'X':^3}", end='')
                     else:
                         print(f"{'':^3}", end='')
-                    print('|', end='')
+                    print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
                     continue
 
                 if not board.spikes[spike].is_empty():
                     if len(board.spikes[spike]) > row_index:
                         kamen = board.spikes[spike].peek()
                         if kamen.owner() == 1:
-                            print(f"{'X':>4}", end='')
+                            print(Fore.RED + f"{'X':>4}", end='')
                         else:
-                            print(f"{'O':>4}", end='')
+                            print(Fore.BLUE + f"{'O':>4}", end='')
                     elif len(board.spikes[spike]) <= row_index:
                         print(f"{'':>4}", end='')
                         
                 else:
                     print(f"{'':>4}", end='')
-            print('  |')
+            print(Fore.GREEN + '  |' + Style.RESET_ALL)
 
 
     def print_bottom_gameboard(self, spikes_side) -> None:
         for row_index in range(5, 0, -1):
-            print('|', end='')
+            print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
             for spike_positions_index, spike in enumerate(spikes_side):
                 if spike_positions_index == 6:
-                    print('|', end='')
+                    print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
                     if len(board.player2.bar) >= row_index:
-                        print(f"{'O':^3}", end='')
+                        print(Fore.BLUE + f"{'O':^3}", end='')
                     else:
                         print(f"{'':^3}", end='')
-                    print('|', end='')
+                    print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
                     continue      
 
                 if not board.spikes[spike].is_empty():
                     if len(board.spikes[spike]) >= row_index:
                         kamen = board.spikes[spike].peek()
                         if kamen.owner() == 1:
-                            print(f"{'X':>4}", end='')
+                            print(Fore.RED + f"{'X':>4}", end='')
                         else:
-                            print(f"{'O':>4}", end='')
+                            print(Fore.BLUE + f"{'O':>4}", end='')
                     elif len(board.spikes[spike]) < row_index:
                         print(f"{'':>4}", end='')
 
                 else:
                     print(f"{'':>4}", end='')
-            print('  |')
+            print(Fore.GREEN + '  |' + Style.RESET_ALL)
 
 
     def print_middle_bar_row(self):
-        print('|                        |BAR|                          |')
+        print(Fore.GREEN + '|                        |BAR|                          |' + Style.RESET_ALL)
     
 
 
 
     def print_spike_indexes(self, spikes_side):
-        print('|', end='')
+        print(Fore.GREEN + '|', end='' + Style.RESET_ALL)
         for column in range(0, 6):
             print(f'{spikes_side[column]:>4}', end='')
         board.print_bar()
         for column in range(7, 13):
             print(f'{spikes_side[column]:>4}', end='')
-        print('  |')
+        print(Fore.GREEN + '  |' + Style.RESET_ALL)
 
 
 
@@ -219,7 +221,7 @@ class Board():
     #display board in cosole
 
     def print_bar(self):
-        print('|   |', end='')
+        print(Fore.GREEN + '|   |' + Style.RESET_ALL, end='')
 
 
     #TODO   
@@ -288,7 +290,7 @@ class Board():
 
 
 
-    # Argument -- player is number of player we are attacking 
+    #? Argument -- player is number of player we are attacking 
     def addToBar(self, player, spike):
         if player == 1:
             piece = self.spikes[spike].pop()
@@ -312,16 +314,23 @@ class Board():
         self.display_board()
         while self.player1.pieces or self.player2.pieces:
             if playerOnTurn == 0:
-                print(f"Player {self.player1.name} is on turn | X | 1")
+                print(Fore.RED + f'Player {self.player1.name} is on turn | X | 1' + Style.RESET_ALL)
                 self.player1.moveSetPlayer1(self.spikes, self)
                 self.display_board()
                 playerOnTurn = 1
             else:
-                print(f"Player {self.player2.name} is on turn | O | 2")
+                print(Fore.BLUE + f'Player {self.player2.name} is on turn | O | 2' + Style.RESET_ALL)
                 self.player2.moveSetPlayer2(self.spikes, self)
                 self.display_board()
                 playerOnTurn = 0
 
+        #? Tohle je prozatimni konecny stav hry check
+        #! Čti tak že v moment kdy hráč má všechny svoje kameny na homeboardu -> nelze mu vygenerovat platne tahy
+        #! Teda hra skončí v nekonečné smyčce
+
+
+
+        #? Tohle bude finalni konecný stav hry check
         if self.player1.pieces.__len__ == 0:
             print("Player 1 has won!")
         else:
@@ -333,60 +342,6 @@ board = Board(Player('Petr', 1), Player('Jirka', 2))
 
 
 board.main()
-
-
-# board.display_board()
-# moves = board.player1.moveSet(board.spikes, board)
-
-# kamen = board.spikes[0].peek()
-# print(kamen)
-
-# for spike in board.spikes:
-#     if spike:
-#         print(spike.peek())
-
-
-# print(len(board.spikes[0]))
-    
-# board.player2.add_piece_to_bar(board.player2.pieces[1])
-
-
-
-
-
-
-
-
-# board.addToBar(1,0)
-# board.addToBar(1,0)
-# board.addToBar(1,11)
-
-
-
-# board.addToBar(2,23)
-# board.addToBar(2,23)
-# board.addToBar(2,5)
-# board.addToBar(2,5)
-
-
-
-# print(f'Delka baru hrace2: {len(board.player2.bar)}')
-# print(f'Delka baru hrace1: {len(board.player1.bar)}')
-
-# board.spikes[23].isStealable(1)
-# board.spikes[0].isStealable(2)
-# board.spikes[1].isStealable(2)
-
-# board.display_board()
-
-
-
-# board.movePiece(2, 23, 22)
-
-# print(len(moves))
-
-# for move in moves:
-#     print(move)
 
 
 

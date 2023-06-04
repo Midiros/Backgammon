@@ -2,6 +2,7 @@ from dice import Dice
 from stone import Stone
 from bar import Bar
 from spike import Spike
+from colorama import Fore, Back, Style
 
 class Player():
     # player1_positions = [0, 0, 11, 11, 11, 11, 11, 16, 16, 16, 18, 18, 18, 18, 18]
@@ -66,22 +67,22 @@ class Player():
 
 
     def choose_move(self, moves):
-        print(f'{self.diceValues}')
-        print(f'You have {len(moves)} possible moves', end=' | ')
+        # print(f'{self.diceValues}')
+        print(Fore.LIGHTCYAN_EX + f'You have {len(moves)} possible moves' + Style.RESET_ALL, end=' | ')
         # print(f'Available moves: {moves}')
         if self.player_number == 1:
-            print(f'{moves}')
+            print(Fore.YELLOW + f'{moves}'+ Style.RESET_ALL)
         else:
-            print(f'{moves[::-1]}')
+            print(Fore.YELLOW + f'{moves[::-1]}'+ Style.RESET_ALL)
 
         while True:
-            move = int(input('Choose your move: '))
-            if move < 0 or move > len(moves) - 1:
+            move = int(input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL))
+            if move < 0 or move > len(moves):
                 print('Invalid input')
                 continue
             else:
                 break
-        return move
+        return int(move - 1)
 
 
 
@@ -91,7 +92,7 @@ class Player():
         if self.diceValues == []:
             self.diceValues = self.roll_dice()
         currentDiceRolls = self.diceValues
-        print(f'Current dice rolls: {currentDiceRolls}')
+        print(Fore.LIGHTCYAN_EX + f'Current dice rolls: {currentDiceRolls}' + Style.RESET_ALL)
         while len(self.diceValues) > 0:
             moves = self.generateAllPossibleMovesPlayer1(spikes, currentDiceRolls)
             if moves == []:
@@ -102,17 +103,20 @@ class Player():
             print(f'Move a piece from spike : {moves[move][0]}')
             print(f'To spike : {moves[move][1]}')
 
-            diceToUse = moves[move][1] - moves[move][0]
-            print(f'With the dice of value : {diceToUse}')
-            self.diceValues.remove(diceToUse)
             if moves[move][0] == 'BAR':
-                pass
-            board.movePiece(self.player_number,moves[move][0]-1, moves[move][1]-1)
+                diceToUse = 0 + moves[move][1] # 0 is the bar
+                piece = self.bar.pop_from_bar()
+                board.spikes[moves[move][1]-1].push(piece)
+            else:
+                diceToUse = moves[move][1] - moves[move][0]
+                board.movePiece(self.player_number,moves[move][0]-1, moves[move][1]-1)
             # if moves[move][1] > 24:
             #     self.FinishedPieces += 1
             #     barredOfPiece = spikes[moves[move][0]-1].peek()
                 # self.pieces.remove(barredOfPiece)
                 # print(f'Barred of piece: {barredOfPiece}')
+            print(f'With the dice of value : {diceToUse}')
+            self.diceValues.remove(diceToUse)
 
 
             board.display_board()
@@ -126,7 +130,7 @@ class Player():
         if self.diceValues == []:
             self.diceValues = self.roll_dice()
         currentDiceRolls = self.diceValues
-        print(f'Current dice rolls: {currentDiceRolls}')
+        print(Fore.LIGHTCYAN_EX+ f'Current dice rolls: {currentDiceRolls}' + Style.RESET_ALL)
         while len(self.diceValues) > 0:
             moves = self.generateAllPossibleMovesPlayer2(spikes, currentDiceRolls)
             if moves == []:
@@ -136,10 +140,16 @@ class Player():
             print(f'Move a piece from spike : {moves[move][0]}')
             print(f'To spike : {moves[move][1]}')
 
-            diceToUse = moves[move][0] - moves[move][1]
+            if moves[move][0] == 'BAR':
+                diceToUse = 25 - moves[move][1] # 25 is the bar
+                piece = self.bar.pop_from_bar()
+                board.spikes[moves[move][1]-1].push(piece)
+            else:
+                diceToUse = moves[move][0] - moves[move][1]
+                board.movePiece(self.player_number,moves[move][0]-1, moves[move][1]-1)
+            
             print(f'With the dice of value : {diceToUse}')
             self.diceValues.remove(diceToUse)
-            board.movePiece(self.player_number,moves[move][0]-1, moves[move][1]-1)
             # if moves[move][1] < 0:
             #     self.FinishedPieces += 1
             #     barredOfPiece = spikes[moves[move][0]-1].peek()
@@ -204,7 +214,7 @@ class Player():
         spikesInControl = self.myCurrentSpikes(allSpikes)
         if self.bar:
             for dice in currentDiceRolls:
-                moves.append(('BAR', -1 + dice))
+                moves.append(('BAR', 0 + dice))
             return moves
 
         for spike in spikesInControl:
@@ -227,7 +237,7 @@ class Player():
         spikesInControl = self.myCurrentSpikes(allSpikes)
         if self.bar:
             for dice in currentDiceRolls:
-                moves.append(('BAR', 24 - dice))
+                moves.append(('BAR', 25 - dice))
             return moves
         
         for spike in spikesInControl:
