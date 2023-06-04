@@ -78,7 +78,7 @@ class Player():
 
 
 
-    def moveSet(self, spikes):
+    def moveSet(self, spikes, board):
         moves = []
         if self.diceValues == []:
             self.diceValues = self.roll_dice()
@@ -96,6 +96,13 @@ class Player():
             diceToUse = moves[move][1] - moves[move][0]
             print(f'With the dice of value : {diceToUse}')
             self.diceValues.remove(diceToUse)
+            if moves[move][1] >= 23:
+                self.FinishedPieces += 1
+                barredOfPiece = spikes[moves[move][0]].pop()
+                # self.pieces.remove(barredOfPiece)
+                print(f'Barred of piece: {barredOfPiece}')
+            board.movePiece(self.player_number,moves[move][0], moves[move][1])
+            board.display_board()
         print('No more moves')
 
             # diceToUse = move[1] - move[0]
@@ -141,7 +148,7 @@ class Player():
                 else:
                     if (spike.my_index() + dice > 23) in stealableSpikes:
                         # print('piece can bare off')
-                        moves.append((spike.my_index(), -1))
+                        moves.append((spike.my_index(), spike.my_index() + dice))
         return moves
 
 

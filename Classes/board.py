@@ -101,63 +101,6 @@ class Board():
             # print(f'Player 2: {len(self.player2.pieces)}', end='')
             # print(f'kamen {self.player2.pieces[stone.stone_index]} byl presunut do baru')
 
-    #     return board
-    def _show_init_state(self):
-        # print out the initial state of the board
-        print('                       --')
-        print('INITIAL STATE OF THE BOARD')
-        print('                       --')
-        for i in range(24):
-            if self.spikes[i].is_empty():
-                print(f'Position {i} is empty')
-            else:
-                print(f'Position {i} has {len(self.spikes[i])} pieces')
-                print(f'Player {self.spikes[i].peek().player_number} has the top piece')
-        print('                       --')
-
-    def _show_state(self):
-        print('                       --')
-        print('CURRENT STATE OF THE BOARD')
-        print('                       --')
-        for i in range(24):
-            if self.spikes[i].is_empty():
-                print(f'Position {i} is empty')
-            else:
-                print(f'Position {i} has {len(self.spikes[i])} pieces')
-                print(f'Player {self.spikes[i].peek().player_number} has the top piece')
-        print('                       --')
-
-
-    def piece_moved_out(self, piece, player_number):
-        if(player_number == 1):
-            self.pieces_in.remove(piece)
-            self.pieces_out.append(piece)
-        else:
-            self.pieces_in_o.remove(piece)
-            self.pieces_out_o.append(piece)
-
-
-    def piece_finished(self, piece, player_number):
-        pass
-
-    def roll_dice(self):
-        self.dice.roll()
-        return self.dice.value
-
-                            # def move_piece(self, piece, move_position, player_number):
-                            #     self.board[piece] = '' # odstrani kamen z puvodni pozice
-                            #     self.piece.set_position(move_position) # nastavi novou pozici kamene
-
-                            #     if(player_number == 1): 
-                            #         self.board[move_position] = 'X'
-                            #     else:
-                            #         self.board[move_position] = 'O'
-                                    
-                            #     return self.board
-    
-    def print_border(self):
-        print('|                        |---|                          |')
-
     def display_board(self):
         top_spikes_indexes = [13,14,15,16,17,18,'BAR',19,20,21,22,23,24]
         bottom_spikes_indexes = [12,11,10,9,8,7,'BAR',6,5,4,3,2,1]
@@ -165,7 +108,7 @@ class Board():
         bottom_spikes = [11,10,9,8,7,6,'BAR',5,4,3,2,1,0]
 
 
-        #FIXME - MAIN BOARD
+    #FIXME - MAIN BOARD
         board.print_border()
         board.print_spike_indexes(top_spikes_indexes)
 
@@ -177,6 +120,22 @@ class Board():
 
         board.print_spike_indexes(bottom_spikes_indexes)
         board.print_border()
+
+    def piece_moved_out(self, piece, player_number):
+        if(player_number == 1):
+            self.pieces_in.remove(piece)
+            self.pieces_out.append(piece)
+        else:
+            self.pieces_in_o.remove(piece)
+            self.pieces_out_o.append(piece)
+
+    def roll_dice(self):
+        self.dice.roll()
+        return self.dice.value
+    
+    def print_border(self):
+        print('|                        |---|                          |')
+
 
 
     def print_top_gameboard(self, spikes_side) -> None:
@@ -273,13 +232,20 @@ class Board():
 
     def movePiece(self, player, originSpike, targetSpike):
         if player == 1:
-            piece = self.spikes[originSpike].pop()
-            self.player1.move_piece(piece, targetSpike)
-            self.spikes[targetSpike].push(piece)
+            if targetSpike >= 23:
+                self.spikes[originSpike].pop()
+            else:
+                piece = self.spikes[originSpike].pop()
+                self.player1.move_piece(piece, targetSpike)
+                self.spikes[targetSpike].push(piece)
         elif player == 2:
-            piece = self.spikes[originSpike].pop()
-            self.player2.move_piece(piece, targetSpike)
-            self.spikes[targetSpike].push(piece)
+            if targetSpike >= 23:
+                self.spikes[originSpike].pop()
+            else:
+                piece = self.spikes[originSpike].pop()
+                self.player2.move_piece(piece, targetSpike)
+                self.spikes[targetSpike].push(piece)
+
 
 
     def addToBar(self, player, spike):
@@ -290,11 +256,37 @@ class Board():
             piece = self.spikes[spike].pop()
             self.player2.add_piece_to_bar(piece)
 
+    def main(self):
+        
+        playerOnTurn = 0
+        startingDice = self.dice.whoStarts()
+        if startingDice[0] > startingDice[1]:
+            self.player1.diceValues = startingDice
+            playerOnTurn = 0
+        else:
+            self.player2.diceValues = startingDice
+            playerOnTurn = 1
+        board.display_board()
+        while self.player1.pieces or self.player2.pieces:
+            if playerOnTurn == 0:
+                print(f"Player {self.player1.name} is on turn")
+                self.player1.moveSet(self.spikes, self)
+            else:
+                print(f"Player {self.player2.name} is on turn")
+                self.player2.moveSet(self.spikes, self)
+
+        if self.player1.pieces.__len__ == 0:
+            print("Player 1 has won!")
+        else:
+            print("Player 2 has won!")
 
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 
-# board._show_init_state()
-board.display_board()
+board.main()
+
+
+# board.display_board()
+# moves = board.player1.moveSet(board.spikes, board)
 
 # kamen = board.spikes[0].peek()
 # print(kamen)
@@ -340,7 +332,6 @@ board.display_board()
 
 
 # board.movePiece(2, 23, 22)
-moves = board.player1.moveSet(board.spikes)
 
 # print(len(moves))
 

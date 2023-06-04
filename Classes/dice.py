@@ -28,7 +28,7 @@ class Dice():
             self.second_roll = randint(1, self.sides)
         if self.first_roll > self.second_roll:
             print('Player 1 starts')
-            return (0, [self.first_roll, self.second_roll])
+            return [self.first_roll, self.second_roll]
         else:
             print('Player 2 starts')
-            return (1,[self.first_roll, self.second_roll])
+            return [self.first_roll, self.second_roll]
