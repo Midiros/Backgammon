@@ -235,7 +235,7 @@ class Board():
 
     def movePiece(self, player, originSpike, targetSpike):
         if player == 1:
-            print('PLAYER 1 MOVE')
+            # print('PLAYER 1 MOVE')
             
             # if targetSpike > 23:
             #     print(f'Delka origin SpikE ____ {len(self.spikes[originSpike])}')
@@ -262,7 +262,7 @@ class Board():
                 # print(f'Delka target spike after ____ {len(self.spikes[targetSpike])}')
 
         elif player == 2:
-            print('PLAYER 2 MOVE')
+            # print('PLAYER 2 MOVE')
             # if targetSpike < 0:
             #     print(f'Delka origin SPIKE ____ {len(self.spikes[originSpike])}')
             #     print('PIECE OUT')
@@ -332,9 +332,9 @@ class Board():
 
         #? Tohle bude finalni konecný stav hry check
         if self.player1.pieces.__len__ == 0:
-            print("Player 1 has won!")
+            print(Fore.YELLOW + 'Player 1 has won!' + Style.RESET_ALL)
         else:
-            print("Player 2 has won!")
+            print(Fore.YELLOW + 'Player 2 has won!' + Style.RESET_ALL)
 
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 

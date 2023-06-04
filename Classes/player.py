@@ -82,6 +82,7 @@ class Player():
                 continue
             else:
                 break
+        print(Fore.MAGENTA + '---------------------------------------------------------')
         return int(move - 1)
 
 
@@ -100,8 +101,8 @@ class Player():
                 break
             move = self.choose_move(moves)
 
-            print(f'Move a piece from spike : {moves[move][0]}')
-            print(f'To spike : {moves[move][1]}')
+            print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
+            print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
 
             if moves[move][0] == 'BAR':
                 diceToUse = 0 + moves[move][1] # 0 is the bar
@@ -115,7 +116,7 @@ class Player():
             #     barredOfPiece = spikes[moves[move][0]-1].peek()
                 # self.pieces.remove(barredOfPiece)
                 # print(f'Barred of piece: {barredOfPiece}')
-            print(f'With the dice of value : {diceToUse}')
+            print(Fore.MAGENTA + f'With the dice of value : {diceToUse}' + Style.RESET_ALL)
             self.diceValues.remove(diceToUse)
 
 
@@ -137,8 +138,8 @@ class Player():
                 print('No possible moves')
                 break
             move = self.choose_move(moves[::-1])
-            print(f'Move a piece from spike : {moves[move][0]}')
-            print(f'To spike : {moves[move][1]}')
+            print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
+            print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
 
             if moves[move][0] == 'BAR':
                 diceToUse = 25 - moves[move][1] # 25 is the bar
@@ -148,7 +149,7 @@ class Player():
                 diceToUse = moves[move][0] - moves[move][1]
                 board.movePiece(self.player_number,moves[move][0]-1, moves[move][1]-1)
             
-            print(f'With the dice of value : {diceToUse}')
+            print(Fore.MAGENTA + f'With the dice of value : {diceToUse}' + Style.RESET_ALL)
             self.diceValues.remove(diceToUse)
             # if moves[move][1] < 0:
             #     self.FinishedPieces += 1
