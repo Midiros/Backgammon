@@ -1,7 +1,7 @@
 from stone import Stone
 
 class Spike():
-    def __init__(self, items = None, index = None):
+    def __init__(self, index, items = None):
         self.__data = items if items else []
         self.index = index
 
@@ -11,7 +11,7 @@ class Spike():
     def pop(self):
         return self.__data.pop(-1)
         
-    def my_index(self):
+    def my_index(self) -> int:
         return self.index
 
     def peek(self):
@@ -40,9 +40,9 @@ class Spike():
     def isStealable(self, player_number):
         if self.__data:
             if self.__data[0].owner() != player_number and len(self.__data) < 2:
-                print('STEALABLE')
+                # print('STEALABLE')
                 return True
-            print('NOT STEALABLE')
+            # print('NOT STEALABLE')
             return False
-        print('SPIKE IS EMPTY')    
-        return False
+        # print('SPIKE IS EMPTY')    
+        return True

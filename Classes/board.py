@@ -15,7 +15,7 @@ class Board():
 
         # Vytvori 24 poli pro hraci desku
         for i in range(24):
-            self.spikes.append(Spike())
+            self.spikes.append(Spike(i))
 
         # for i in range(24):
         #     self.spikes.append(Stack())
@@ -66,6 +66,24 @@ class Board():
     #     #     print(f'key: {key}')
     #     #     for i in range(value):
     #     #         print(f'{key} klice => {i}. opakovani')
+
+
+
+
+
+
+
+
+
+
+
+
+
+# INITI LINE -------------------------------------
+
+
+
+
 
 
 
@@ -126,19 +144,19 @@ class Board():
         self.dice.roll()
         return self.dice.value
 
-    def move_piece(self, piece, move_position, player_number):
-        self.board[piece] = '' # odstrani kamen z puvodni pozice
-        self.piece.set_position(move_position) # nastavi novou pozici kamene
+                            # def move_piece(self, piece, move_position, player_number):
+                            #     self.board[piece] = '' # odstrani kamen z puvodni pozice
+                            #     self.piece.set_position(move_position) # nastavi novou pozici kamene
 
-        if(player_number == 1): 
-            self.board[move_position] = 'X'
-        else:
-            self.board[move_position] = 'O'
-            
-        return self.board
+                            #     if(player_number == 1): 
+                            #         self.board[move_position] = 'X'
+                            #     else:
+                            #         self.board[move_position] = 'O'
+                                    
+                            #     return self.board
     
     def print_border(self):
-        print('|                        |---|                        |')
+        print('|                        |---|                          |')
 
     def display_board(self):
         top_spikes_indexes = [13,14,15,16,17,18,'BAR',19,20,21,22,23,24]
@@ -186,7 +204,7 @@ class Board():
                         
                 else:
                     print(f"{'':>4}", end='')
-            print('|')
+            print('  |')
 
 
     def print_bottom_gameboard(self, spikes_side) -> None:
@@ -214,11 +232,11 @@ class Board():
 
                 else:
                     print(f"{'':>4}", end='')
-            print('|')
+            print('  |')
 
 
     def print_middle_bar_row(self):
-        print('|                        |BAR|                        |')
+        print('|                        |BAR|                          |')
     
 
 
@@ -230,7 +248,7 @@ class Board():
         board.print_bar()
         for column in range(7, 13):
             print(f'{spikes_side[column]:>4}', end='')
-        print('|')
+        print('  |')
 
 
 
@@ -272,12 +290,18 @@ class Board():
             piece = self.spikes[spike].pop()
             self.player2.add_piece_to_bar(piece)
 
-# create a 2 dimensional array for the board (24 positions) based on the pieces positions
 
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 
 # board._show_init_state()
 board.display_board()
+
+# kamen = board.spikes[0].peek()
+# print(kamen)
+
+# for spike in board.spikes:
+#     if spike:
+#         print(spike.peek())
 
 
 # print(len(board.spikes[0]))
@@ -291,31 +315,37 @@ board.display_board()
 
 
 
-
-
-board.addToBar(1,0)
-board.addToBar(1,0)
-board.addToBar(1,11)
-
-
-
-board.addToBar(2,23)
-board.addToBar(2,23)
-board.addToBar(2,5)
-board.addToBar(2,5)
+# board.addToBar(1,0)
+# board.addToBar(1,0)
+# board.addToBar(1,11)
 
 
 
-print(f'Delka baru hrace2: {len(board.player2.bar)}')
-print(f'Delka baru hrace1: {len(board.player1.bar)}')
-
-board.spikes[23].isStealable(1)
-board.spikes[0].isStealable(2)
-board.spikes[1].isStealable(2)
-
-board.display_board()
+# board.addToBar(2,23)
+# board.addToBar(2,23)
+# board.addToBar(2,5)
+# board.addToBar(2,5)
 
 
+
+# print(f'Delka baru hrace2: {len(board.player2.bar)}')
+# print(f'Delka baru hrace1: {len(board.player1.bar)}')
+
+# board.spikes[23].isStealable(1)
+# board.spikes[0].isStealable(2)
+# board.spikes[1].isStealable(2)
+
+# board.display_board()
+
+
+
+# board.movePiece(2, 23, 22)
+moves = board.player1.moveSet(board.spikes)
+
+# print(len(moves))
+
+# for move in moves:
+#     print(move)
 
 
 

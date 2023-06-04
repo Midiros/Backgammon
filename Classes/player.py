@@ -1,6 +1,7 @@
 from dice import Dice
 from stone import Stone
 from bar import Bar
+from spike import Spike
 
 class Player():
     # player1_positions = [0, 0, 11, 11, 11, 11, 11, 16, 16, 16, 18, 18, 18, 18, 18]
@@ -16,6 +17,8 @@ class Player():
         # self.pieces_out = []
         self.pieces = []
         self.bar = Bar()
+        self.diceValues = []
+        self.FinishedPieces = 0
         # self.pieces_in = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14] # Na zacatku hry je vsech 15 figurek v poli
         # self.generate_pieces()
 
@@ -55,4 +58,88 @@ class Player():
     
     def __str__(self):
         return self.name
+    
+    # def illegal_move(self, move, moves):
+    #     while move < 0 or move > len(moves) - 1:
+    #         print('Invalid input')
+    #     return True
+
+
+    def choose_move(self, moves):
+        print(f'Available moves: {moves}')
+        while True:
+            move = int(input('Choose your move: '))
+            if move < 0 or move > len(moves) - 1:
+                print('Invalid input')
+                continue
+            else:
+                break
+        return move
+
+
+
+    def moveSet(self, spikes):
+        moves = []
+        if self.diceValues == []:
+            self.diceValues = self.roll_dice()
+        currentDiceRolls = self.diceValues
+        while len(self.diceValues) > 0:
+            moves = self.generateAllPossibleMoves(spikes, currentDiceRolls)
+            if moves == []:
+                print('No possible moves')
+                break
+            move = self.choose_move(moves)
+            print(moves[move])
+            diceToUse = moves[move][1] - moves[move][0]
+            print(diceToUse)
+            self.diceValues.remove(diceToUse)
+        print('No more moves')
+
+            # diceToUse = move[1] - move[0]
+            
+
+    def listStealableSpikes(self, allSpikes):
+        stealableSpikes = []
+        for spike in allSpikes:
+            if spike.isStealable(self.player_number):
+                stealableSpikes.append(spike.my_index())
+                print(stealableSpikes)
+                # print(spike.my_index())
+        if len(stealableSpikes) < 0:
+            print('No stealable spikes')
+
+        return stealableSpikes
+    
+    def myCurrentSpikes(self, allSpikes):
+        spikesInControl = []
+        for spike in allSpikes:
+            if spike.peek() != None:
+                if spike.peek().owner() == self.player_number:
+                    spikesInControl.append(spike)
+        if len(spikesInControl) < 0:
+            print('No spikes in control')
+
+        return spikesInControl
+
+
+
+    def generateAllPossibleMoves(self, allSpikes, currentDiceRolls):
+        moves = []
+        stealableSpikes = self.listStealableSpikes(allSpikes)
+        spikesInControl = self.myCurrentSpikes(allSpikes)
+        for spike in spikesInControl:
+            for dice in currentDiceRolls:
+                if spike.my_index() + dice < 24:
+                    if (spike.my_index() + dice) in stealableSpikes:
+                        print('piece can move and steal')
+                        moves.append((spike.my_index(), spike.my_index() + dice))
+                else:
+                    if (spike.my_index() + dice > 23) in stealableSpikes:
+                        print('piece can bare off')
+                        moves.append((spike.my_index(), -1))
+        return moves
+
+
+
+
 
