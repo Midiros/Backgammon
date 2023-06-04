@@ -1,4 +1,5 @@
 from random import randint
+from colorama import Fore, Style
 
 
 class Dice():
@@ -26,9 +27,11 @@ class Dice():
         while self.first_roll == self.second_roll:
             self.first_roll = randint(1, self.sides)
             self.second_roll = randint(1, self.sides)
+        print(Fore.RED + f'Player 1 rolled {self.first_roll}' + Style.RESET_ALL)
+        print(Fore.BLUE + f'Player 2 rolled {self.second_roll}' + Style.RESET_ALL)
         if self.first_roll > self.second_roll:
-            print('Player 1 starts')
-            return (0, [self.first_roll, self.second_roll])
+            print(Fore.RED + 'Player 1 starts' + Style.RESET_ALL)
+            return [self.first_roll, self.second_roll]
         else:
-            print('Player 2 starts')
-            return (1,[self.first_roll, self.second_roll])
+            print(Fore.BLUE + 'Player 2 starts' + Style.RESET_ALL)
+            return [self.first_roll, self.second_roll]
