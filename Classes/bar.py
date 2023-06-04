@@ -6,10 +6,10 @@ class Bar():
         self.bar = Stack()
 
     def add_to_bar(self, stone) -> None:
-            self.bar.push(stone)
+        self.bar.push(stone)
     
     def pop_from_bar(self) -> Stone:
-            return self.bar.pop()
+        return self.bar.pop()
         
     def __len__(self):
         return len(self.bar)

@@ -42,6 +42,9 @@ class Spike():
             if self.__data[0].owner() != player_number and len(self.__data) < 2:
                 # print('STEALABLE')
                 return True
+            elif self.__data[0].owner() == player_number and len(self.__data) < 5:
+                # print('you can moev to your own piece')
+                return True
             # print('NOT STEALABLE')
             return False
         # print('SPIKE IS EMPTY')    
