@@ -83,15 +83,18 @@ class Player():
         if self.diceValues == []:
             self.diceValues = self.roll_dice()
         currentDiceRolls = self.diceValues
+        print(f'Current dice rolls: {currentDiceRolls}')
         while len(self.diceValues) > 0:
             moves = self.generateAllPossibleMoves(spikes, currentDiceRolls)
             if moves == []:
                 print('No possible moves')
                 break
             move = self.choose_move(moves)
-            print(moves[move])
+            print(f'Move a piece from spike : {moves[move][0]}')
+            print(f'To spike : {moves[move][1]}')
+
             diceToUse = moves[move][1] - moves[move][0]
-            print(diceToUse)
+            print(f'With the dice of value : {diceToUse}')
             self.diceValues.remove(diceToUse)
         print('No more moves')
 
@@ -103,10 +106,12 @@ class Player():
         for spike in allSpikes:
             if spike.isStealable(self.player_number):
                 stealableSpikes.append(spike.my_index())
-                print(stealableSpikes)
                 # print(spike.my_index())
         if len(stealableSpikes) < 0:
             print('No stealable spikes')
+        
+        
+        # print(stealableSpikes)
 
         return stealableSpikes
     
@@ -131,11 +136,11 @@ class Player():
             for dice in currentDiceRolls:
                 if spike.my_index() + dice < 24:
                     if (spike.my_index() + dice) in stealableSpikes:
-                        print('piece can move and steal')
+                        # print('piece can move and steal')
                         moves.append((spike.my_index(), spike.my_index() + dice))
                 else:
                     if (spike.my_index() + dice > 23) in stealableSpikes:
-                        print('piece can bare off')
+                        # print('piece can bare off')
                         moves.append((spike.my_index(), -1))
         return moves
 
