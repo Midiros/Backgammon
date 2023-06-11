@@ -46,6 +46,9 @@ class Board():
                 self.spikes[int(key)].push(self.player2.pieces[index])  
                 index += 1
 
+    def clear(self):
+        clear = os.system('cls' if os.name=='nt' else 'clear')
+        
         self.pieces_X = self.player1.pieces
         self.pieces_in_X = self.pieces_X
         self.pieces_out_X = []
@@ -210,6 +213,7 @@ class Board():
             self.player2.add_piece_to_bar(piece)
 
     def main(self):
+        self.clear()
         playerOnTurn = 0
         startingDice = self.dice.whoStarts()
         if startingDice[0] > startingDice[1]:
