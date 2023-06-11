@@ -3,6 +3,7 @@ from dice import Dice
 from stone import Stone
 from bar import Bar
 from spike import Spike
+from stack import Stack
 from colorama import Fore, Back, Style
 
 class Player():
@@ -13,10 +14,12 @@ class Player():
         self.player_number = player_number
         self.dice = Dice()
         self.score = 0
+        self.bareState = False
         self.pieces = []
         self.bar = Bar()
         self.diceValues = []
         self.FinishedPieces = 0
+        self.allFinishedPieces = Stack()
     
     def clear(self):
         clear = os.system('cls' if os.name=='nt' else 'clear')
@@ -86,8 +89,12 @@ class Player():
 
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
-
-            if moves[move][0] == 'BAR':
+            if moves[move][1] == 'FINISH':
+                finPiece = board.spikes[moves[move][0]-1].pop()
+                self.allFinishedPieces.push(finPiece)
+                diceToUse = moves[move][2]
+                self.FinishedPieces += 1
+            elif moves[move][0] == 'BAR':
                 diceToUse = moves[move][1] # 0 is the bar
                 piece = self.bar.pop_from_bar()
                 if board.spikes[moves[move][1]-1].owner() == 2:
@@ -126,7 +133,13 @@ class Player():
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
 
-            if moves[move][0] == 'BAR':
+            if moves[move][1] == 'FINISH':
+                finPiece = board.spikes[moves[move][0]-1].pop()
+                self.allFinishedPieces.push(finPiece)
+                diceToUse = moves[move][2]
+                self.FinishedPieces += 1
+
+            elif moves[move][0] == 'BAR':
                 diceToUse = 25 - moves[move][1] # 25 is the bar
                 #! MINUS JEDNA KVULI INDEXOVANI OD 0 A PRINTENI OD INDEXU 1
                 piece = self.bar.pop_from_bar()
@@ -193,7 +206,10 @@ class Player():
         #!TODO NOT FUNCTIONAL
         for spike in spikesInControl:
             for dice in currentDiceRolls:
-                if spike.my_index() + dice < 24:
+                if self.bareState == True:
+                        if spike.my_index() + dice > 23:
+                            moves.append((spike.my_index() + 1, 'FINISH', dice))
+                elif spike.my_index() + dice < 24:
                     if (spike.my_index() + dice) in stealableSpikes:
                         if((spike.my_index() + 1 , spike.my_index() + dice + 1) not in moves):
                             moves.append((spike.my_index() + 1, spike.my_index() + dice + 1))
@@ -219,11 +235,17 @@ class Player():
         #!TODO NOT FUNCTIONAL
         for spike in spikesInControl:
             for dice in currentDiceRolls:
-                if spike.my_index() - dice >= 0:
+                if self.bareState == True:
+                    if spike.my_index() - dice < 0:
+                        moves.append((spike.my_index() + 1, 'FINISH', dice))
+                
+                elif spike.my_index() - dice >= 0:
                     if (spike.my_index() - dice) in stealableSpikes:
                         if((spike.my_index() + 1 , spike.my_index() - dice + 1) not in moves):
                             moves.append((spike.my_index() + 1, spike.my_index() - dice + 1))
                         # print('piece can move and steal')
+
+
         return moves
 
 

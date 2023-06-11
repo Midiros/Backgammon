@@ -20,6 +20,16 @@ class Stack():
 
     def is_empty(self):
         return len(self.__data) == 0
+    
+    def getHistoryAverage(self):
+        movementCount = 0
+        for kamen in self.__data:
+            movementCount += len(kamen.history)
+            
+        return movementCount / len(self.__data)
+
+    def myLen(self):
+        return len(self.__data)
 
     def __len__(self):
         return len(self.__data)

@@ -20,16 +20,33 @@ class Board():
         for i in range(24):
             self.spikes.append(Spike(i))
 
+
+
+    #! DEFAULT STARTER POSITIONS
+        # # player1_starter_positions = [0, 11, 16, 18]
+        # player1_starter_positions = {   0: 2,
+        #                                 11: 5,
+        #                                 16: 3, 
+        #                                 18: 5}
+        # # player2_starter_positions = [5, 7, 12, 23]
+        # player2_starter_positions = {   5: 5,
+        #                                 7: 3,
+        #                                 12: 5,
+        #                                 23: 2}
+        
+
+    #! BEAR OFF STARTER POSITIONS
         # player1_starter_positions = [0, 11, 16, 18]
-        player1_starter_positions = {   0: 2,
-                                        11: 5,
-                                        16: 3, 
-                                        18: 5}
+        player2_starter_positions = {   0: 5,
+                                        1: 5,
+                                        2: 3, 
+                                        6: 2}
         # player2_starter_positions = [5, 7, 12, 23]
-        player2_starter_positions = {   5: 5,
-                                        7: 3,
-                                        12: 5,
-                                        23: 2}
+        player1_starter_positions = {   17: 2,
+                                        21: 3,
+                                        22: 5,
+                                        23: 5}
+
 
         # Vytvori 15 figurek/kamenu pro hrace 1
         index = 0
@@ -216,6 +233,35 @@ class Board():
             print(piece)
             self.player2.add_piece_to_bar(piece)
 
+    def bearOffState(self, player):
+        if player == 1:
+            for spike in self.spikes[0:18:1]:
+                if spike.myLen() > 0 and spike.peek().owner() == 1:
+                    return False
+        elif player == 2:
+            for spike in self.spikes[23:5:-1]:
+                if spike.myLen() > 0 and spike.peek().owner() == 2:
+                    return False
+        return True
+
+#! Method for statistics
+    def getStats(self):
+        averageTTL_player1 = 0
+        averageTTL_player2 = 0
+        # for piece in self.player1.allFinishedPieces:
+        #     averageTTL_player1 += len(piece.history)
+        # for piece in self.player2.allFinishedPieces:
+        #     averageTTL_player2 += len(piece.history)
+
+        averageTTL_player1 = self.player1.allFinishedPieces.getHistoryAverage()
+        averageTTL_player2 = self.player2.allFinishedPieces.getHistoryAverage()
+        print(f'Player 1 average TTL: {averageTTL_player1}')
+        print(f'Player 2 average TTL: {averageTTL_player2}')
+
+
+        # print(f'Player 1 average TTL: {averageTTL_player1/len(self.player1.FinishedPieces)}')
+        # print(f'Player 2 average TTL: {averageTTL_player2/len(self.player2.FinishedPieces)}')
+
 #! Main game loop
     def main(self):
         self.clear()
@@ -228,13 +274,15 @@ class Board():
             self.player2.diceValues = startingDice
             playerOnTurn = 1
         self.display_board()
-        while self.player1.pieces or self.player2.pieces:
+        while (self.player1.FinishedPieces < 15) and (self.player2.FinishedPieces < 15):
             if playerOnTurn == 0:
+                self.player1.bareState = self.bearOffState(1)
                 print(Fore.RED + f'Player {self.player1.name} is on turn | X | 1' + Style.RESET_ALL)
                 self.player1.moveSetPlayer1(self.spikes, self)
                 self.display_board()
                 playerOnTurn = 1
             else:
+                self.player2.bareState = self.bearOffState(2)
                 print(Fore.BLUE + f'Player {self.player2.name} is on turn | O | 2' + Style.RESET_ALL)
                 self.player2.moveSetPlayer2(self.spikes, self)
                 self.display_board()
@@ -247,10 +295,12 @@ class Board():
 
 
         #? Tohle bude finalni konecný stav hry check
-        if self.player1.pieces.__len__ == 0:
+        if self.player1.FinishedPieces == 15:
             print(Fore.YELLOW + 'Player 1 has won!' + Style.RESET_ALL)
         else:
             print(Fore.YELLOW + 'Player 2 has won!' + Style.RESET_ALL)
+
+        self.getStats()
 
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 

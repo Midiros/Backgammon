@@ -37,6 +37,9 @@ class Spike():
     def __str__(self):
         return str(self.__data)
     
+    def myLen(self):
+        return len(self.__data)
+
     def list_of_stones(self):
         for kamen in self.__data:
             print(kamen)
