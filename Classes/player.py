@@ -55,9 +55,13 @@ class Player():
             print(Fore.YELLOW + f'{moves[::-1]}'+ Style.RESET_ALL)
 
         while True:
-            move = int(input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL))
-            if move < 0 or move > len(moves):
+            try:
+                move = int(input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL))
+            except ValueError:
                 print('Invalid input')
+                continue
+            if move < 0 or move > len(moves):
+                print('Non-existent move')
                 continue
             else:
                 break
@@ -99,6 +103,7 @@ class Player():
             board.display_board()
         print(Fore.YELLOW + 'No more moves' + Style.RESET_ALL)
         while True:
+            self.diceValues = []
             input(Fore.YELLOW + 'Press enter to continue' + Style.RESET_ALL)
             self.clear()
             break
@@ -138,6 +143,7 @@ class Player():
             board.display_board()
         print(Fore.YELLOW + 'No more moves' + Style.RESET_ALL)
         while True:
+            self.diceValues = []
             input(Fore.YELLOW + 'Press enter to continue' + Style.RESET_ALL)
             self.clear()
             break
@@ -180,7 +186,8 @@ class Player():
                     if (spike == -1 + dice):
                         # if (len(allSpikes[spike]) <= 1):
                             print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
-                            moves.append(('BAR', spike + 1))
+                            if(('BAR', spike + 1) not in moves):
+                                moves.append(('BAR', spike + 1))
             return moves
 
         #!TODO NOT FUNCTIONAL
@@ -188,7 +195,8 @@ class Player():
             for dice in currentDiceRolls:
                 if spike.my_index() + dice < 24:
                     if (spike.my_index() + dice) in stealableSpikes:
-                        moves.append((spike.my_index() + 1, spike.my_index() + dice + 1))
+                        if((spike.my_index() + 1 , spike.my_index() + dice + 1) not in moves):
+                            moves.append((spike.my_index() + 1, spike.my_index() + dice + 1))
                         # print('piece can move and steal')
         return moves
 
@@ -204,7 +212,8 @@ class Player():
                     if (spike == 24 - dice):
                         # if (len(allSpikes[spike]) <= 1):
                             print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
-                            moves.append(('BAR', spike + 1))
+                            if(('BAR', spike + 1) not in moves):
+                                moves.append(('BAR', spike + 1))
             return moves
         
         #!TODO NOT FUNCTIONAL
@@ -212,7 +221,8 @@ class Player():
             for dice in currentDiceRolls:
                 if spike.my_index() - dice >= 0:
                     if (spike.my_index() - dice) in stealableSpikes:
-                        moves.append((spike.my_index() + 1, spike.my_index() - dice + 1))
+                        if((spike.my_index() + 1 , spike.my_index() - dice + 1) not in moves):
+                            moves.append((spike.my_index() + 1, spike.my_index() - dice + 1))
                         # print('piece can move and steal')
         return moves
 

@@ -45,16 +45,16 @@ class Spike():
     def isStealable(self, player_number):
         if self.__data:
             if self.owner() != player_number:
-                print(f'spike neni nas {self.index}')
+                # print(f'spike neni nas {self.index}')
                 if len(self.__data) >= 2:
-                    print('spike ma vice jak 2 kameny > nelze ukrast')
+                    # print('spike ma vice jak 2 kameny > nelze ukrast')
                     return False
                 else:
-                    print('spike ma mene jak 2 kameny > lze ukrast')
+                    # print('spike ma mene jak 2 kameny > lze ukrast')
                     return True
-            print(f'spike je nas {self.index}')
+            # print(f'spike je nas {self.index}')
             return True
-        print('spike je prazdny')
+        # print('spike je prazdny')
         return True
                 # print(f'Stealable spike of opponent {self.__data[0].owner()} and has {len(self.__data)} stones on position {self.index}')
 
