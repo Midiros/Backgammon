@@ -21,6 +21,12 @@ class Spike():
         else:
             return None
     
+    def owner(self):
+        if self.__data:
+            return self.__data[0].owner()
+        else:
+            return None
+
     
     def is_empty(self):
         return not self.__data
@@ -39,13 +45,17 @@ class Spike():
     #!input hrac ktery chce krast
     def isStealable(self, player_number):
         if self.__data:
-            if self.__data[0].owner() != player_number and len(self.__data) < 2:
+            if (self.__data[0].owner() != player_number) and (len(self.__data) < 2):
+                # print(f'Stealable spike of opponent {self.__data[0].owner()} and has {len(self.__data)} stones on position {self.index}')
                 #! lze ukrast kamen protihrace
                 return True
-            elif self.__data[0].owner() == player_number and len(self.__data) < 5:
+            elif (self.__data[0].owner() == player_number) and (len(self.__data) <= 5):
+                # print(f'Our own spike of player {self.__data[0].owner()} and has {len(self.__data)} stones on position {self.index}')
                 #! Nas spike a je na nem mene jak 5 kameny
                 return True
             #! nelze ukrast vice jak dva kameny protihrace
+            # print(f'Not stealable spike of player {self.__data[0].owner()} and has {len(self.__data)} stones on position {self.index}')
             return False
-        #! je prazdny    
+        #! je prazdny
+        # print(f'stealable spike is empty on position {self.index}')    
         return True

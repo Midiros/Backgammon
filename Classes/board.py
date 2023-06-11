@@ -207,11 +207,11 @@ class Board():
 
     #? Argument -- player is number of player we are attacking 
     def addToBar(self, player, spike):
-        if player == 1:
+        if player == 1 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
             print(piece)
             self.player1.add_piece_to_bar(piece)
-        elif player == 2:
+        elif player == 2 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
             print(piece)
             self.player2.add_piece_to_bar(piece)

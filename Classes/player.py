@@ -86,6 +86,8 @@ class Player():
             if moves[move][0] == 'BAR':
                 diceToUse = 0 + moves[move][1] # 0 is the bar
                 piece = self.bar.pop_from_bar()
+                if board.spikes[moves[move][1]-1].owner() == 2:
+                    board.addToBar(2, moves[move][1]-1)
                 board.spikes[moves[move][1]-1].push(piece)
             else:
                 diceToUse = moves[move][1] - moves[move][0]
@@ -113,6 +115,7 @@ class Player():
             moves = self.generateAllPossibleMovesPlayer2(spikes, currentDiceRolls)
             if moves == []:
                 print('No possible moves')
+                self.diceValues = []
                 break
             move = self.choose_move(moves[::-1])
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
@@ -120,7 +123,10 @@ class Player():
 
             if moves[move][0] == 'BAR':
                 diceToUse = 25 - moves[move][1] # 25 is the bar
+                #! MINUS JEDNA KVULI INDEXOVANI OD 0 A PRINTENI OD INDEXU 1
                 piece = self.bar.pop_from_bar()
+                if board.spikes[moves[move][1]-1].owner() == 1:
+                    board.addToBar(1, moves[move][1]-1)
                 board.spikes[moves[move][1]-1].push(piece)
             else:
                 diceToUse = moves[move][0] - moves[move][1]
@@ -143,6 +149,7 @@ class Player():
         for spike in allSpikes:
             if spike.isStealable(self.player_number):
                 stealableSpikes.append(spike.my_index())
+                # print(f'Stealable spike: {spike.my_index()}')
         if len(stealableSpikes) < 0:
             print('No stealable spikes')
         
@@ -169,10 +176,9 @@ class Player():
         if self.bar:
             for dice in currentDiceRolls:
                 for spike in stealableSpikes:
-                    if (spike <= 0 + dice):
-                        if (len(allSpikes[spike]) <= 1):
-                            print('stealable spike')
-                            moves.append(('BAR', 0 + dice))
+                    if (spike == 0 + dice):
+                        # if (len(allSpikes[spike]) <= 1):
+                            moves.append(('BAR', spike))
             return moves
 
         #!TODO NOT FUNCTIONAL
@@ -193,10 +199,9 @@ class Player():
         if self.bar:
             for dice in currentDiceRolls:
                 for spike in stealableSpikes:
-                    if (spike >= 25 - dice):
-                        if (len(allSpikes[spike]) <= 1):
-                            print('stealable spike')
-                            moves.append(('BAR', 25 - dice))
+                    if (spike == 24 - dice):
+                        # if (len(allSpikes[spike]) <= 1):
+                            moves.append(('BAR', spike + 1))
             return moves
         
         #!TODO NOT FUNCTIONAL
