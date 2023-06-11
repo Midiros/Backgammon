@@ -62,10 +62,6 @@ class Board():
                 self.player2.pieces.append(Stone(self.player2.player_number, index, int(key)))    
                 self.spikes[int(key)].push(self.player2.pieces[index])  
                 index += 1
-
-    def clear(self):
-        clear = os.system('cls' if os.name=='nt' else 'clear')
-        
         self.pieces_X = self.player1.pieces
         self.pieces_in_X = self.pieces_X
         self.pieces_out_X = []
@@ -76,6 +72,10 @@ class Board():
         self.bottom_spikes_indexes = [12,11,10,9,8,7,'BAR',6,5,4,3,2,1]
         self.top_spikes = [12,13,14,15,16,17,'BAR',18,19,20,21,22,23]
         self.bottom_spikes = [11,10,9,8,7,6,'BAR',5,4,3,2,1,0]
+
+    def clear(self):
+        clear = os.system('cls' if os.name=='nt' else 'clear')
+        
 
 #! Metoda pro clearovani CLI
     def clear(self):
