@@ -57,6 +57,10 @@ class Board():
         self.top_spikes = [12,13,14,15,16,17,'BAR',18,19,20,21,22,23]
         self.bottom_spikes = [11,10,9,8,7,6,'BAR',5,4,3,2,1,0]
 
+#! Metoda pro clearovani CLI
+    def clear(self):
+        clear = os.system('cls' if os.name=='nt' else 'clear')
+
 #! Hlavni metoda printeni boardu do CLI
     def display_board(self):
         self.print_border()
@@ -212,7 +216,9 @@ class Board():
             print(piece)
             self.player2.add_piece_to_bar(piece)
 
+#! Main game loop
     def main(self):
+        self.clear()
         playerOnTurn = 0
         startingDice = self.dice.whoStarts()
         if startingDice[0] > startingDice[1]:
