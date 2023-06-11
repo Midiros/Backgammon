@@ -33,7 +33,7 @@ class Player():
     
     def add_piece_to_bar(self, stone):
         self.bar.add_to_bar(stone)
-        print(f'added {stone} to bar')
+        print(Fore.CYAN + f'added {stone} to bar' + Style.RESET_ALL)
         stone.add_to_history(-1)
     
     def list_pieces(self):
@@ -198,7 +198,7 @@ class Player():
                 for spike in stealableSpikes:
                     if (spike == -1 + dice):
                         # if (len(allSpikes[spike]) <= 1):
-                            print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
+                            # print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
                             if(('BAR', spike + 1) not in moves):
                                 moves.append(('BAR', spike + 1))
             return moves
@@ -206,14 +206,14 @@ class Player():
         #!TODO NOT FUNCTIONAL
         for spike in spikesInControl:
             for dice in currentDiceRolls:
-                if self.bareState == True:
-                        if spike.my_index() + dice > 23:
-                            moves.append((spike.my_index() + 1, 'FINISH', dice))
-                elif spike.my_index() + dice < 24:
+                if spike.my_index() + dice < 24:
                     if (spike.my_index() + dice) in stealableSpikes:
                         if((spike.my_index() + 1 , spike.my_index() + dice + 1) not in moves):
                             moves.append((spike.my_index() + 1, spike.my_index() + dice + 1))
                         # print('piece can move and steal')
+                if self.bareState == True:
+                        if spike.my_index() + dice > 23:
+                            moves.append((spike.my_index() + 1, 'FINISH', dice))
         return moves
 
 #! Bere vsechny spikes hrace, vsechny spikes na ktere se da pohnout a vsechny mozne hodnoty kostek a vraci list vsech moznych tahu
@@ -227,7 +227,7 @@ class Player():
                 for spike in stealableSpikes:
                     if (spike == 24 - dice):
                         # if (len(allSpikes[spike]) <= 1):
-                            print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
+                            # print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
                             if(('BAR', spike + 1) not in moves):
                                 moves.append(('BAR', spike + 1))
             return moves
@@ -235,16 +235,14 @@ class Player():
         #!TODO NOT FUNCTIONAL
         for spike in spikesInControl:
             for dice in currentDiceRolls:
-                if self.bareState == True:
-                    if spike.my_index() - dice < 0:
-                        moves.append((spike.my_index() + 1, 'FINISH', dice))
-                
-                elif spike.my_index() - dice >= 0:
+                if spike.my_index() - dice >= 0:
                     if (spike.my_index() - dice) in stealableSpikes:
                         if((spike.my_index() + 1 , spike.my_index() - dice + 1) not in moves):
                             moves.append((spike.my_index() + 1, spike.my_index() - dice + 1))
                         # print('piece can move and steal')
-
+                if self.bareState == True:
+                    if spike.my_index() - dice < 0:
+                        moves.append((spike.my_index() + 1, 'FINISH', dice))
 
         return moves
 
