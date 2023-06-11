@@ -84,7 +84,7 @@ class Player():
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
 
             if moves[move][0] == 'BAR':
-                diceToUse = 0 + moves[move][1] # 0 is the bar
+                diceToUse = moves[move][1] # 0 is the bar
                 piece = self.bar.pop_from_bar()
                 if board.spikes[moves[move][1]-1].owner() == 2:
                     board.addToBar(2, moves[move][1]-1)
@@ -148,6 +148,7 @@ class Player():
         stealableSpikes = []
         for spike in allSpikes:
             if spike.isStealable(self.player_number):
+                # print(f'Stealable spike: {spike.my_index()} owner {spike.owner()} length {len(spike)}')
                 stealableSpikes.append(spike.my_index())
                 # print(f'Stealable spike: {spike.my_index()}')
         if len(stealableSpikes) < 0:
@@ -176,9 +177,10 @@ class Player():
         if self.bar:
             for dice in currentDiceRolls:
                 for spike in stealableSpikes:
-                    if (spike == 0 + dice):
+                    if (spike == -1 + dice):
                         # if (len(allSpikes[spike]) <= 1):
-                            moves.append(('BAR', spike))
+                            print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
+                            moves.append(('BAR', spike + 1))
             return moves
 
         #!TODO NOT FUNCTIONAL
@@ -201,6 +203,7 @@ class Player():
                 for spike in stealableSpikes:
                     if (spike == 24 - dice):
                         # if (len(allSpikes[spike]) <= 1):
+                            print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
                             moves.append(('BAR', spike + 1))
             return moves
         
