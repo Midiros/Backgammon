@@ -3,6 +3,7 @@ from dice import Dice
 from stone import Stone
 from bar import Bar
 from spike import Spike
+from stack import Stack
 from colorama import Fore, Back, Style
 
 class Player():
@@ -13,10 +14,12 @@ class Player():
         self.player_number = player_number
         self.dice = Dice()
         self.score = 0
+        self.bareState = False
         self.pieces = []
         self.bar = Bar()
         self.diceValues = []
         self.FinishedPieces = 0
+        self.allFinishedPieces = Stack()
     
     def clear(self):
         clear = os.system('cls' if os.name=='nt' else 'clear')
@@ -30,7 +33,7 @@ class Player():
     
     def add_piece_to_bar(self, stone):
         self.bar.add_to_bar(stone)
-        print(f'added {stone} to bar')
+        print(Fore.CYAN + f'added {stone} to bar' + Style.RESET_ALL)
         stone.add_to_history(-1)
     
     def list_pieces(self):
@@ -55,9 +58,13 @@ class Player():
             print(Fore.YELLOW + f'{moves[::-1]}'+ Style.RESET_ALL)
 
         while True:
-            move = int(input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL))
-            if move < 0 or move > len(moves):
+            try:
+                move = int(input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL))
+            except ValueError:
                 print('Invalid input')
+                continue
+            if move < 0 or move > len(moves):
+                print('Non-existent move')
                 continue
             else:
                 break
@@ -82,10 +89,16 @@ class Player():
 
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
-
-            if moves[move][0] == 'BAR':
-                diceToUse = 0 + moves[move][1] # 0 is the bar
+            if moves[move][1] == 'FINISH':
+                finPiece = board.spikes[moves[move][0]-1].pop()
+                self.allFinishedPieces.push(finPiece)
+                diceToUse = moves[move][2]
+                self.FinishedPieces += 1
+            elif moves[move][0] == 'BAR':
+                diceToUse = moves[move][1] # 0 is the bar
                 piece = self.bar.pop_from_bar()
+                if board.spikes[moves[move][1]-1].owner() == 2:
+                    board.addToBar(2, moves[move][1]-1)
                 board.spikes[moves[move][1]-1].push(piece)
             else:
                 diceToUse = moves[move][1] - moves[move][0]
@@ -97,6 +110,7 @@ class Player():
             board.display_board()
         print(Fore.YELLOW + 'No more moves' + Style.RESET_ALL)
         while True:
+            self.diceValues = []
             input(Fore.YELLOW + 'Press enter to continue' + Style.RESET_ALL)
             self.clear()
             break
@@ -113,14 +127,24 @@ class Player():
             moves = self.generateAllPossibleMovesPlayer2(spikes, currentDiceRolls)
             if moves == []:
                 print('No possible moves')
+                self.diceValues = []
                 break
             move = self.choose_move(moves[::-1])
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
 
-            if moves[move][0] == 'BAR':
+            if moves[move][1] == 'FINISH':
+                finPiece = board.spikes[moves[move][0]-1].pop()
+                self.allFinishedPieces.push(finPiece)
+                diceToUse = moves[move][2]
+                self.FinishedPieces += 1
+
+            elif moves[move][0] == 'BAR':
                 diceToUse = 25 - moves[move][1] # 25 is the bar
+                #! MINUS JEDNA KVULI INDEXOVANI OD 0 A PRINTENI OD INDEXU 1
                 piece = self.bar.pop_from_bar()
+                if board.spikes[moves[move][1]-1].owner() == 1:
+                    board.addToBar(1, moves[move][1]-1)
                 board.spikes[moves[move][1]-1].push(piece)
             else:
                 diceToUse = moves[move][0] - moves[move][1]
@@ -132,6 +156,7 @@ class Player():
             board.display_board()
         print(Fore.YELLOW + 'No more moves' + Style.RESET_ALL)
         while True:
+            self.diceValues = []
             input(Fore.YELLOW + 'Press enter to continue' + Style.RESET_ALL)
             self.clear()
             break
@@ -142,7 +167,9 @@ class Player():
         stealableSpikes = []
         for spike in allSpikes:
             if spike.isStealable(self.player_number):
+                # print(f'Stealable spike: {spike.my_index()} owner {spike.owner()} length {len(spike)}')
                 stealableSpikes.append(spike.my_index())
+                # print(f'Stealable spike: {spike.my_index()}')
         if len(stealableSpikes) < 0:
             print('No stealable spikes')
         
@@ -169,10 +196,11 @@ class Player():
         if self.bar:
             for dice in currentDiceRolls:
                 for spike in stealableSpikes:
-                    if (spike <= 0 + dice):
-                        if (len(allSpikes[spike]) <= 1):
-                            print('stealable spike')
-                            moves.append(('BAR', 0 + dice))
+                    if (spike == -1 + dice):
+                        # if (len(allSpikes[spike]) <= 1):
+                            # print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
+                            if(('BAR', spike + 1) not in moves):
+                                moves.append(('BAR', spike + 1))
             return moves
 
         #!TODO NOT FUNCTIONAL
@@ -180,8 +208,12 @@ class Player():
             for dice in currentDiceRolls:
                 if spike.my_index() + dice < 24:
                     if (spike.my_index() + dice) in stealableSpikes:
-                        moves.append((spike.my_index() + 1, spike.my_index() + dice + 1))
+                        if((spike.my_index() + 1 , spike.my_index() + dice + 1) not in moves):
+                            moves.append((spike.my_index() + 1, spike.my_index() + dice + 1))
                         # print('piece can move and steal')
+                if self.bareState == True:
+                        if spike.my_index() + dice > 23:
+                            moves.append((spike.my_index() + 1, 'FINISH', dice))
         return moves
 
 #! Bere vsechny spikes hrace, vsechny spikes na ktere se da pohnout a vsechny mozne hodnoty kostek a vraci list vsech moznych tahu
@@ -193,10 +225,11 @@ class Player():
         if self.bar:
             for dice in currentDiceRolls:
                 for spike in stealableSpikes:
-                    if (spike >= 25 - dice):
-                        if (len(allSpikes[spike]) <= 1):
-                            print('stealable spike')
-                            moves.append(('BAR', 25 - dice))
+                    if (spike == 24 - dice):
+                        # if (len(allSpikes[spike]) <= 1):
+                            # print(f'piece can move from bar to spike {spike} length {len(allSpikes[spike])} index {allSpikes[spike].my_index()}')
+                            if(('BAR', spike + 1) not in moves):
+                                moves.append(('BAR', spike + 1))
             return moves
         
         #!TODO NOT FUNCTIONAL
@@ -204,8 +237,13 @@ class Player():
             for dice in currentDiceRolls:
                 if spike.my_index() - dice >= 0:
                     if (spike.my_index() - dice) in stealableSpikes:
-                        moves.append((spike.my_index() + 1, spike.my_index() - dice + 1))
+                        if((spike.my_index() + 1 , spike.my_index() - dice + 1) not in moves):
+                            moves.append((spike.my_index() + 1, spike.my_index() - dice + 1))
                         # print('piece can move and steal')
+                if self.bareState == True:
+                    if spike.my_index() - dice < 0:
+                        moves.append((spike.my_index() + 1, 'FINISH', dice))
+
         return moves
 
 
