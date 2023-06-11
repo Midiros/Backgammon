@@ -1,6 +1,7 @@
 import random
-from colorama import Fore, Back, Style
+import os
 
+from colorama import Fore, Back, Style
 from stone import Stone
 from dice import Dice
 from player import Player
@@ -19,16 +20,6 @@ class Board():
         for i in range(24):
             self.spikes.append(Spike(i))
 
-        # for i in range(24):
-        #     self.spikes.append(Stack())
-        
-
-        
-        #!  CISTE PRO TESTING
-        # self.player1 = Player('Petr', 1)
-        # self.player2 = Player('Jirka', 2)
-        #!  CISTE PRO TESTING
-        
         # player1_starter_positions = [0, 11, 16, 18]
         player1_starter_positions = {   0: 2,
                                         11: 5,
@@ -65,63 +56,18 @@ class Board():
         self.bottom_spikes_indexes = [12,11,10,9,8,7,'BAR',6,5,4,3,2,1]
         self.top_spikes = [12,13,14,15,16,17,'BAR',18,19,20,21,22,23]
         self.bottom_spikes = [11,10,9,8,7,6,'BAR',5,4,3,2,1,0]
-        
 
-    #     #!TEST
-    #     # for key, value in player1_starter_positions.items():
-    #     #     print(f'key: {key}')
-    #     #     for i in range(value):
-    #     #         print(f'{key} klice => {i}. opakovani')
-
-
-
-
-
-
-
-
-
-
-
-
-
-# INITI LINE -------------------------------------
-
-
-
-
-
-
-
-    def add_to_bar(self, player, stone):
-        if player == 1:
-            self.player1.pieces[stone].position = 99
-            self.player1.bar.add_to_bar(player, stone)
-            board.spikes[stone.position].pop()
-            # print(f'Player 1: {len(self.player1.pieces)}', end='')
-            # print(f'kamen {self.player1.pieces[stone.stone_index]} byl presunut do baru')
-        elif player == 2:
-            self.player2.pieces[stone].position = 99
-            self.player2.bar.add_to_bar(player, stone)
-            board.spikes[stone.position].pop()
-            # print(f'Player 2: {len(self.player2.pieces)}', end='')
-            # print(f'kamen {self.player2.pieces[stone.stone_index]} byl presunut do baru')
-
+#! Hlavni metoda printeni boardu do CLI
     def display_board(self):
-        
-
         self.print_border()
         self.print_spike_indexes(self.top_spikes_indexes)
-
         self.print_top_gameboard(self.top_spikes)
-
         self.print_middle_bar_row()
-        
         self.print_bottom_gameboard(self.bottom_spikes)
-
         self.print_spike_indexes(self.bottom_spikes_indexes)
         self.print_border()
 
+#? Zatim WIP
     def piece_moved_out(self, piece, player_number):
         if(player_number == 1):
             self.pieces_in.remove(piece)
@@ -139,10 +85,12 @@ class Board():
 
 
 
+#! Projede vsechny radky v HORNI polovine hraci desky a vytiskne vsechny kaminky ktere jsou na HORNICH spikes
     def print_top_gameboard(self, spikes_side) -> None:
         for row_index in range(0, 5, 1):
             print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
             for spike_positions_index, spike in enumerate(spikes_side):
+                #! Pokud je spike_positions_index 6, tak se jedna o bar > viz nahore v top_spike_indexes
                 if spike_positions_index == 6:
                     print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
                     if len(board.player1.bar) > row_index:
@@ -167,10 +115,12 @@ class Board():
             print(Fore.GREEN + '  |' + Style.RESET_ALL)
 
 
+#! Projede vsechny radky v DOLNI polovine hraci desky a vytiskne vsechny kaminky ktere jsou na dolnich spikes
     def print_bottom_gameboard(self, spikes_side) -> None:
         for row_index in range(5, 0, -1):
             print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
             for spike_positions_index, spike in enumerate(spikes_side):
+                #! Pokud je spike_positions_index 6, tak se jedna o bar > viz nahore v bottom_spike_indexes
                 if spike_positions_index == 6:
                     print(Fore.GREEN + '|' + Style.RESET_ALL, end='')
                     if len(board.player2.bar) >= row_index:
@@ -189,7 +139,6 @@ class Board():
                             print(Fore.BLUE + f"{'O':>4}", end='')
                     elif len(board.spikes[spike]) < row_index:
                         print(f"{'':>4}", end='')
-
                 else:
                     print(f"{'':>4}", end='')
             print(Fore.GREEN + '  |' + Style.RESET_ALL)
@@ -200,7 +149,7 @@ class Board():
     
 
 
-
+#! Printuje indexy spikeu na hraci desce
     def print_spike_indexes(self, spikes_side):
         print(Fore.GREEN + '|', end='' + Style.RESET_ALL)
         for column in range(0, 6):
@@ -215,10 +164,8 @@ class Board():
 
     #TODO - PRIO - nefunguje barrovnai piecue a obcas se pokazi hrani piece ven z herniho pole ? Problem s delkou asi je potreba resit nejak pushovani a popovani
 
-
-
-    #TODO - Prio
-    #display board in cosole
+    def print_bar(self):
+        print(Fore.GREEN + '|   |' + Style.RESET_ALL, end='')
 
     def print_bar(self):
         print(Fore.GREEN + '|   |' + Style.RESET_ALL, end='')
@@ -232,63 +179,27 @@ class Board():
     def save_state():
         pass
 
-
+#!Bere startovni spike, cilovy spike a hrace a podle toho jestli je na cilovem spike nejaky kamen protihrace, tak ho bud vyhodi na bar a nebo presune svuj kamen 
     def movePiece(self, player, originSpike, targetSpike):
         if player == 1:
-            # print('PLAYER 1 MOVE')
-            
-            # if targetSpike > 23:
-            #     print(f'Delka origin SpikE ____ {len(self.spikes[originSpike])}')
-            #     print('PIECE OUT')
-            #     self.spikes[originSpike].pop()
             if len(self.spikes[targetSpike]) == 1 and (self.spikes[targetSpike].peek().owner() == 2):
-                    print('POSUNOUT NA BAR')
-                    # print(f'Delka origin spike before ____ {len(self.spikes[originSpike])}')
-                    # print(f'Delka target spike before ____ {len(self.spikes[targetSpike])}')
-
                     self.addToBar(2, targetSpike)
                     piece = self.spikes[originSpike].pop()
                     self.spikes[targetSpike].push(piece)
-                    # print(f'Delka origin spike after ____ {len(self.spikes[originSpike])}')
-                    # print(f'Delka target spike after ____ {len(self.spikes[targetSpike])}')
             else:
-                # print(f'Delka origin spike before ____ {len(self.spikes[originSpike])}')
-                # print(f'Delka target spike before ____ {len(self.spikes[targetSpike])}')
-
                 piece = self.spikes[originSpike].pop()
                 self.player1.move_piece(piece, targetSpike)
                 self.spikes[targetSpike].push(piece)
-                # print(f'Delka origin spike after ____ {len(self.spikes[originSpike])}')
-                # print(f'Delka target spike after ____ {len(self.spikes[targetSpike])}')
 
         elif player == 2:
-            # print('PLAYER 2 MOVE')
-            # if targetSpike < 0:
-            #     print(f'Delka origin SPIKE ____ {len(self.spikes[originSpike])}')
-            #     print('PIECE OUT')
-            #     self.spikes[originSpike].pop()
             if len(self.spikes[targetSpike]) == 1 and (self.spikes[targetSpike].peek().owner() == 1):
-                    print('POSUNOUT NA BAR')
-                    # print(f'Delka origin spike before ____ {len(self.spikes[originSpike])}')
-                    # print(f'Delka target spike before ____ {len(self.spikes[targetSpike])}')
-
                     self.addToBar(1, targetSpike)
                     piece = self.spikes[originSpike].pop()
                     self.spikes[targetSpike].push(piece)
-                    # print(f'Delka origin spike after ____ {len(self.spikes[originSpike])}')
-                    # print(f'Delka target spike after ____ {len(self.spikes[targetSpike])}')
-
             else:
-                # print(f'Delka origin spike before ____ {len(self.spikes[originSpike])}')
-                # print(f'Delka target spike before ____ {len(self.spikes[targetSpike])}')
-
                 piece = self.spikes[originSpike].pop()
                 self.player2.move_piece(piece, targetSpike)
                 self.spikes[targetSpike].push(piece)
-                # print(f'Delka origin spike after ____ {len(self.spikes[originSpike])}')
-                # print(f'Delka target spike after ____ {len(self.spikes[targetSpike])}')
-
-
 
     #? Argument -- player is number of player we are attacking 
     def addToBar(self, player, spike):
@@ -302,7 +213,6 @@ class Board():
             self.player2.add_piece_to_bar(piece)
 
     def main(self):
-        
         playerOnTurn = 0
         startingDice = self.dice.whoStarts()
         if startingDice[0] > startingDice[1]:
@@ -338,13 +248,7 @@ class Board():
 
 board = Board(Player('Petr', 1), Player('Jirka', 2))
 
-# board.addToBar(2,23)
-
-
 board.main()
-
-
-
 
 
 

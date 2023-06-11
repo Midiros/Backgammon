@@ -36,16 +36,16 @@ class Spike():
             print(kamen)
 
 
-    #input hrac ktery chce krast
+    #!input hrac ktery chce krast
     def isStealable(self, player_number):
         if self.__data:
             if self.__data[0].owner() != player_number and len(self.__data) < 2:
-                # print('STEALABLE')
+                #! lze ukrast kamen protihrace
                 return True
             elif self.__data[0].owner() == player_number and len(self.__data) < 5:
-                # print('you can moev to your own piece')
+                #! Nas spike a je na nem mene jak 5 kameny
                 return True
-            # print('NOT STEALABLE')
+            #! nelze ukrast vice jak dva kameny protihrace
             return False
-        # print('SPIKE IS EMPTY')    
+        #! je prazdny    
         return True

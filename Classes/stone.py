@@ -1,4 +1,5 @@
 from stack import Stack
+from colorama import Fore, Style
 
 class Stone():
     def __init__(self, player_number,stone_index, position):
@@ -44,14 +45,5 @@ class Stone():
         self.history.append(position)
 
     def __str__(self):
-        return (str(self.stone_index) + ' stone at position ' + str(self.position) + ' belongs to player' + str(self.player_number))
+        return (Fore.LIGHTYELLOW_EX + 'Stone at Spike with index ' + str(self.position) + ' owned by Player nr.' + str(self.player_number) + Style.RESET_ALL)
     
-
-# sutr = Stone(2, 6, 0)
-
-# print(sutr)
-# sutr.set_position(2)
-# sutr.set_position(4)
-# sutr.set_position(2)
-# print(sutr.history)
-
