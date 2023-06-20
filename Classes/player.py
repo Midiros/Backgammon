@@ -38,7 +38,6 @@ class Player():
     def add_piece_to_bar(self, stone):
         self.bar.add_to_bar(stone)
         print(Fore.CYAN + f'Kicked {stone}'+ Fore.CYAN + ' from board to opponents bar' + Style.RESET_ALL)
-        stone.add_to_history('BAR')
     
     def list_pieces(self):
         for piece in self.pieces:
@@ -104,6 +103,7 @@ class Player():
             if moves[move][1] == 'FINISH':
                 finPiece = board.spikes[moves[move][0]-1].pop()
                 finPiece.add_to_history('FINISH')
+                finPiece.position = 'FINISH'
                 self.allFinishedPieces.push(finPiece)
                 diceToUse = moves[move][2]
                 self.FinishedPieces += 1
@@ -150,6 +150,7 @@ class Player():
             if moves[move][1] == 'FINISH':
                 finPiece = board.spikes[moves[move][0]-1].pop()
                 finPiece.add_to_history('FINISH')
+                finPiece.position = 'FINISH'
                 self.allFinishedPieces.push(finPiece)
                 diceToUse = moves[move][2]
                 self.FinishedPieces += 1

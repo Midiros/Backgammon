@@ -25,8 +25,11 @@ class Stack():
         movementCount = 0
         for kamen in self.__data:
             movementCount += len(kamen.history)
-            
-        return movementCount / len(self.__data)
+        if self.__data:
+            return movementCount / len(self.__data)
+        else:
+            # stack je prazdny
+            return 0 
 
     def myLen(self):
         return len(self.__data)

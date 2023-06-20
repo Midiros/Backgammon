@@ -16,6 +16,7 @@ class Board():
         self.player2 = player2
         self.dice = Dice()
         self.spikes = []
+        self.playerOnTurn = 15
 
         # Vytvori 24 poli pro hraci desku
         for i in range(24):
@@ -24,29 +25,29 @@ class Board():
 
 
     # ! DEFAULT STARTER POSITIONS
-        # player1_starter_positions = [0, 11, 16, 18]
-        player1_starter_positions = {   0: 2,
-                                        11: 5,
-                                        16: 3, 
-                                        18: 5}
-        # player2_starter_positions = [5, 7, 12, 23]
-        player2_starter_positions = {   5: 5,
-                                        7: 3,
-                                        12: 5,
-                                        23: 2}
+        # # player1_starter_positions = [0, 11, 16, 18]
+        # player1_starter_positions = {   0: 2,
+        #                                 11: 5,
+        #                                 16: 3, 
+        #                                 18: 5}
+        # # player2_starter_positions = [5, 7, 12, 23]
+        # player2_starter_positions = {   5: 5,
+        #                                 7: 3,
+        #                                 12: 5,
+        #                                 23: 2}
 
 
     #! BEAR OFF STARTER POSITIONS
-        # # player1_starter_positions = [0, 11, 16, 18]
-        # player2_starter_positions = {   0: 5,
-        #                                 1: 5,
-        #                                 2: 3, 
-        #                                 6: 2}
-        # # player2_starter_positions = [5, 7, 12, 23]
-        # player1_starter_positions = {   17: 2,
-        #                                 21: 3,
-        #                                 22: 5,
-        #                                 23: 5}
+        # player1_starter_positions = [0, 11, 16, 18]
+        player2_starter_positions = {   0: 5,
+                                        1: 5,
+                                        2: 3, 
+                                        6: 2}
+        # player2_starter_positions = [5, 7, 12, 23]
+        player1_starter_positions = {   17: 2,
+                                        21: 3,
+                                        22: 5,
+                                        23: 5}
 
 
 
@@ -69,12 +70,14 @@ class Board():
                     self.spikes[int(key)].push(self.player2.pieces[index])  
                     index += 1
 
-        self.pieces_X = self.player1.pieces
-        self.pieces_in_X = self.pieces_X
-        self.pieces_out_X = []
-        self.pieces_Y = self.player2.pieces
-        self.pieces_in_Y = self.pieces_Y
-        self.pieces_out_Y = []
+
+        #!not neeeded ?
+        # self.pieces_X = self.player1.pieces
+        # self.pieces_in_X = self.pieces_X
+        # self.pieces_out_X = []
+        # self.pieces_Y = self.player2.pieces
+        # self.pieces_in_Y = self.pieces_Y
+        # self.pieces_out_Y = []
         self.top_spikes_indexes = [13,14,15,16,17,18,'BAR',19,20,21,22,23,24]
         self.bottom_spikes_indexes = [12,11,10,9,8,7,'BAR',6,5,4,3,2,1]
         self.top_spikes = [12,13,14,15,16,17,'BAR',18,19,20,21,22,23]
@@ -84,29 +87,30 @@ class Board():
 #! Metoda pro ukladani stavu hry do JSON souboru
     def save_game(self):
         gameData = {
-            player1_name: {
+            'player1': {
                 'pieces': {},
-                'allFinishedPieces': {},
                 'stats': {}
             },
-            player2_name: {
+            'player2': {
                 'pieces': {},
-                'allFinishedPieces': {},
                 'stats': {}
             },
+            'playerOnTurn': self.playerOnTurn
         }
 
         for piece in self.player1.pieces:
-            gameData[player1_name]['pieces'][piece.stone_index] = {'player_number': piece.player_number, 'index': piece.stone_index, 'position': piece.position, 'name': piece.player_name, 'history': piece.history}
+            gameData['player1']['pieces'][piece.stone_index] = {'player_number': piece.player_number, 'index': piece.stone_index, 'position': piece.position, 'name': piece.player_name, 'history': piece.history}
 
         for piece in self.player2.pieces:
-            gameData[player2_name]['pieces'][piece.stone_index] = {'player_number': piece.player_number, 'index': piece.stone_index, 'position': piece.position, 'name': piece.player_name, 'history': piece.history}
+            gameData['player2']['pieces'][piece.stone_index] = {'player_number': piece.player_number, 'index': piece.stone_index, 'position': piece.position, 'name': piece.player_name, 'history': piece.history}
 
 
-        gameData[player1_name]['stats'] = {'name': self.player1.name, 'player_number': self.player1.player_number, 'finishedPieces': self.player1.FinishedPieces}
-        gameData[player2_name]['stats'] = {'name': self.player2.name, 'player_number': self.player2.player_number, 'finishedPieces': self.player2.FinishedPieces}
+        gameData['player1']['stats'] = {'name': self.player1.name, 'player_number': self.player1.player_number, 'finishedPieces': self.player1.FinishedPieces, 'diceValues': self.player1.diceValues}
+        gameData['player2']['stats'] = {'name': self.player2.name, 'player_number': self.player2.player_number, 'finishedPieces': self.player2.FinishedPieces, 'diceValues': self.player2.diceValues}
 
-        with open('saveGame.json', 'w') as saveFile:
+        # os.remove('../assets/saveGame.json')
+
+        with open('../assets/saveGame.json', 'w') as saveFile:
             json.dump(gameData, saveFile, indent=4)
             saveFile.close()
 
@@ -257,10 +261,12 @@ class Board():
         if player == 1 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
             # print(piece)
+            piece.add_to_history('BAR')
             self.player1.add_piece_to_bar(piece)
         elif player == 2 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
             # print(piece)
+            piece.add_to_history('BAR')
             self.player2.add_piece_to_bar(piece)
 
     def bearOffState(self, player):
@@ -295,22 +301,24 @@ class Board():
 #! Main game loop
     def main(self):
         self.clear()
-        playerOnTurn = 0
-        startingDice = self.dice.whoStarts()
-        if startingDice[0] > startingDice[1]:
-            self.player1.diceValues = startingDice
-            playerOnTurn = 0
+        if self.playerOnTurn == 0 or self.playerOnTurn == 1:
+            print('Continuing game')
         else:
-            self.player2.diceValues = startingDice
-            playerOnTurn = 1
+            startingDice = self.dice.whoStarts()
+            if startingDice[0] > startingDice[1]:
+                self.player1.diceValues = startingDice
+                self.playerOnTurn = 0
+            else:
+                self.player2.diceValues = startingDice
+                self.playerOnTurn = 1
         self.display_board()
         while (self.player1.FinishedPieces < 15) and (self.player2.FinishedPieces < 15):
-            if playerOnTurn == 0:
+            if self.playerOnTurn == 0:
                 self.player1.bareState = self.bearOffState(1)
                 print(Fore.RED + f'Player {self.player1.name} is on turn | X | 1' + Style.RESET_ALL)
                 self.player1.moveSetPlayer1(self.spikes, self)
                 self.display_board()
-                playerOnTurn = 1
+                self.playerOnTurn = 1
             else:
                 self.player2.bareState = self.bearOffState(2)
                 if self.player2.AIstate == True:
@@ -318,7 +326,7 @@ class Board():
                 print(Fore.BLUE + f'Player {self.player2.name} is on turn | O | 2' + Style.RESET_ALL)
                 self.player2.moveSetPlayer2(self.spikes, self)
                 self.display_board()
-                playerOnTurn = 0
+                self.playerOnTurn = 0
 
         #? Tohle je prozatimni konecny stav hry check
         #! Čti tak že v moment kdy hráč má všechny svoje kameny na homeboardu -> nelze mu vygenerovat platne tahy
@@ -333,23 +341,82 @@ class Board():
             print(Fore.YELLOW + f'{board.player2.name} has won!' + Style.RESET_ALL)
 
         self.getStats()
-    
+        os.remove('../assets/saveGame.json')
 
+def loadGame():
+    with open('../assets/saveGame.json', 'r') as saveFile:
+        gameData = json.load(saveFile)
+        board = Board(Player(gameData['player1']['stats']['name'], 1), Player(gameData['player2']['stats']['name'], 2))
+        board.player1.pieces = []
+        board.player2.pieces = []
+        board.spikes = []
+        for i in range(24):
+            board.spikes.append(Spike(i))
+        board.player1.FinishedPieces = gameData['player1']['stats']['finishedPieces']
+        board.player2.FinishedPieces = gameData['player2']['stats']['finishedPieces']
+        for piece in gameData['player1']['pieces']:
+            kamen = Stone(gameData['player1']['pieces'][piece]['player_number'], gameData['player1']['pieces'][piece]['index'], gameData['player1']['pieces'][piece]['position'], gameData['player1']['pieces'][piece]['name'])
+            # print(gameData['player1']['pieces'][piece])
+            board.player1.pieces.append(kamen)
+            board.player1.pieces[int(piece)].history = gameData['player1']['pieces'][piece]['history']
+            if kamen.position == 'BAR':
+                board.player1.add_piece_to_bar(kamen)
+                continue
+            elif kamen.position == 'FINISH':
+                board.player1.allFinishedPieces.push(kamen)
+                continue
+            else:
+                board.spikes[kamen.position].push(board.player1.pieces[kamen.stone_index])
+        
+        for piece in gameData['player2']['pieces']:
+            kamen = Stone(gameData['player2']['pieces'][piece]['player_number'], gameData['player2']['pieces'][piece]['index'], gameData['player2']['pieces'][piece]['position'], gameData['player2']['pieces'][piece]['name'])
+            # print(gameData['player2']['pieces'][piece])
+            board.player2.pieces.append(kamen)
+            board.player2.pieces[int(piece)].history = gameData['player2']['pieces'][piece]['history']
+            if kamen.position == 'BAR':
+                board.player2.add_piece_to_bar(kamen)
+                continue
+            elif kamen.position == 'FINISH':
+                board.player2.allFinishedPieces.push(kamen)
+                continue
+            else:
+                board.spikes[kamen.position].push(board.player2.pieces[kamen.stone_index])
+        
+        board.playerOnTurn = gameData['playerOnTurn']
 
-
+    return board
 
 
 #! Start of the game
 
+# saveFile = '../assets/saveGame.json'
 
-player1_name = input('Player 1 name: ')
-opponentType = input('Do you wish to play against AI? (yes/no): ')
-if opponentType == 'yes':
-    player2_name = 'AI'
+
+if os.path.isfile('../assets/saveGame.json'):
+    continueGame = input('Do you wish to load saved game? (yes/no): ')
+    if continueGame == 'yes':
+        print('Loading saved game...')
+        board = loadGame()
+        board.clear()
+        board.display_board()
+    else:
+        player1_name = input('Player 1 name: ')
+        opponentType = input('Do you wish to play against AI? (yes/no): ')
+        if opponentType == 'yes':
+            player2_name = 'AI'
+        else:
+            player2_name = input('Player 2 name: ')
+        board = Board(Player(player1_name, 1), Player(player2_name, 2))
 else:
-    player2_name = input('Player 2 name: ')
+    player1_name = input('Player 1 name: ')
+    opponentType = input('Do you wish to play against AI? (yes/no): ')
+    if opponentType == 'yes':
+        player2_name = 'AI'
+    else:
+        player2_name = input('Player 2 name: ')
+    board = Board(Player(player1_name, 1), Player(player2_name, 2))
 
-board = Board(Player(player1_name, 1), Player(player2_name, 2))
+
 
 board.main()
 
