@@ -23,43 +23,43 @@ class Board():
 
 
     #! DEFAULT STARTER POSITIONS
-        # # player1_starter_positions = [0, 11, 16, 18]
-        # player1_starter_positions = {   0: 2,
-        #                                 11: 5,
-        #                                 16: 3, 
-        #                                 18: 5}
-        # # player2_starter_positions = [5, 7, 12, 23]
-        # player2_starter_positions = {   5: 5,
-        #                                 7: 3,
-        #                                 12: 5,
-        #                                 23: 2}
+        # player1_starter_positions = [0, 11, 16, 18]
+        player1_starter_positions = {   0: 2,
+                                        11: 5,
+                                        16: 3, 
+                                        18: 5}
+        # player2_starter_positions = [5, 7, 12, 23]
+        player2_starter_positions = {   5: 5,
+                                        7: 3,
+                                        12: 5,
+                                        23: 2}
         
 
     #! BEAR OFF STARTER POSITIONS
-        # player1_starter_positions = [0, 11, 16, 18]
-        player2_starter_positions = {   0: 5,
-                                        1: 5,
-                                        2: 3, 
-                                        6: 2}
-        # player2_starter_positions = [5, 7, 12, 23]
-        player1_starter_positions = {   17: 2,
-                                        21: 3,
-                                        22: 5,
-                                        23: 5}
+        # # player1_starter_positions = [0, 11, 16, 18]
+        # player2_starter_positions = {   0: 5,
+        #                                 1: 5,
+        #                                 2: 3, 
+        #                                 6: 2}
+        # # player2_starter_positions = [5, 7, 12, 23]
+        # player1_starter_positions = {   17: 2,
+        #                                 21: 3,
+        #                                 22: 5,
+        #                                 23: 5}
 
 
         # Vytvori 15 figurek/kamenu pro hrace 1
         index = 0
         for key, value in player1_starter_positions.items():
             for counter in range(value):
-                self.player1.pieces.append(Stone(self.player1.player_number, index, int(key)))
+                self.player1.pieces.append(Stone(self.player1.player_number, index, int(key), self.player1.name))
                 self.spikes[int(key)].push(self.player1.pieces[index])  
                 index += 1
         # Vytvori 15 figurek/kamenu pro hrace 2
         index = 0
         for key, value in player2_starter_positions.items():
             for counter in range(value):
-                self.player2.pieces.append(Stone(self.player2.player_number, index, int(key)))    
+                self.player2.pieces.append(Stone(self.player2.player_number, index, int(key), self.player2.name))    
                 self.spikes[int(key)].push(self.player2.pieces[index])  
                 index += 1
 
@@ -226,11 +226,11 @@ class Board():
     def addToBar(self, player, spike):
         if player == 1 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
-            print(piece)
+            # print(piece)
             self.player1.add_piece_to_bar(piece)
         elif player == 2 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
-            print(piece)
+            # print(piece)
             self.player2.add_piece_to_bar(piece)
 
     def bearOffState(self, player):
@@ -283,6 +283,8 @@ class Board():
                 playerOnTurn = 1
             else:
                 self.player2.bareState = self.bearOffState(2)
+                if self.player2.AIstate == True:
+                    self.clear()
                 print(Fore.BLUE + f'Player {self.player2.name} is on turn | O | 2' + Style.RESET_ALL)
                 self.player2.moveSetPlayer2(self.spikes, self)
                 self.display_board()

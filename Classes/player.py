@@ -37,7 +37,7 @@ class Player():
     
     def add_piece_to_bar(self, stone):
         self.bar.add_to_bar(stone)
-        print(Fore.CYAN + f'added {stone} to bar' + Style.RESET_ALL)
+        print(Fore.CYAN + f'Kicked {stone}'+ Fore.CYAN + ' from board to opponents bar' + Style.RESET_ALL)
         stone.add_to_history(-1)
     
     def list_pieces(self):
@@ -139,6 +139,7 @@ class Player():
             move = self.choose_move(moves[::-1])
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
+            
 
             if moves[move][1] == 'FINISH':
                 finPiece = board.spikes[moves[move][0]-1].pop()
@@ -159,8 +160,15 @@ class Player():
             
             print(Fore.MAGENTA + f'With the dice of value : {diceToUse}' + Style.RESET_ALL)
             self.diceValues.remove(diceToUse)
-
+            
             board.display_board()
+
+            if self.AIstate == True:
+                while True:
+                    input(Fore.YELLOW + 'Press enter to continue' + Style.RESET_ALL)
+                    self.clear()
+                    break
+
         print(Fore.YELLOW + 'No more moves' + Style.RESET_ALL)
         while True:
             self.diceValues = []

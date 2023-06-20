@@ -2,7 +2,7 @@ from stack import Stack
 from colorama import Fore, Style
 
 class Stone():
-    def __init__(self, player_number,stone_index, position):
+    def __init__(self, player_number,stone_index, position, player_name):
         if player_number not in [1, 2]:
             raise ValueError('Player number must be 1 or 2')
         elif stone_index not in range(15):
@@ -13,6 +13,7 @@ class Stone():
         self.player_number = player_number
         self.stone_index = stone_index
         self.position = position
+        self.player_name = player_name
         self.history = []
         self.history.append(position) # Pri vytvoreni kamene, prida startovni pozici
 
@@ -21,6 +22,8 @@ class Stone():
         return self.player_number
     
 
+    def player_name(self) -> str:
+        return self.player_name
 
     def stone_index(self) -> int:
         return self.stone_index    
@@ -45,5 +48,5 @@ class Stone():
         self.history.append(position)
 
     def __str__(self):
-        return (Fore.LIGHTYELLOW_EX + 'Stone at Spike with index ' + str(self.position) + ' owned by Player nr.' + str(self.player_number) + Style.RESET_ALL)
+        return (Fore.LIGHTYELLOW_EX + 'Stone on spike: ' + str(self.position+1) + ' owned by player: ' + str(self.player_name) + Style.RESET_ALL)
     
