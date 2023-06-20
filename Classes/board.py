@@ -23,29 +23,29 @@ class Board():
 
 
     #! DEFAULT STARTER POSITIONS
-        # player1_starter_positions = [0, 11, 16, 18]
-        player1_starter_positions = {   0: 2,
-                                        11: 5,
-                                        16: 3, 
-                                        18: 5}
-        # player2_starter_positions = [5, 7, 12, 23]
-        player2_starter_positions = {   5: 5,
-                                        7: 3,
-                                        12: 5,
-                                        23: 2}
+        # # player1_starter_positions = [0, 11, 16, 18]
+        # player1_starter_positions = {   0: 2,
+        #                                 11: 5,
+        #                                 16: 3, 
+        #                                 18: 5}
+        # # player2_starter_positions = [5, 7, 12, 23]
+        # player2_starter_positions = {   5: 5,
+        #                                 7: 3,
+        #                                 12: 5,
+        #                                 23: 2}
         
 
     #! BEAR OFF STARTER POSITIONS
-    #     # player1_starter_positions = [0, 11, 16, 18]
-    #     player2_starter_positions = {   0: 5,
-    #                                     1: 5,
-    #                                     2: 3, 
-    #                                     6: 2}
-    #     # player2_starter_positions = [5, 7, 12, 23]
-    #     player1_starter_positions = {   17: 2,
-    #                                     21: 3,
-    #                                     22: 5,
-    #                                     23: 5}
+        # player1_starter_positions = [0, 11, 16, 18]
+        player2_starter_positions = {   0: 5,
+                                        1: 5,
+                                        2: 3, 
+                                        6: 2}
+        # player2_starter_positions = [5, 7, 12, 23]
+        player1_starter_positions = {   17: 2,
+                                        21: 3,
+                                        22: 5,
+                                        23: 5}
 
 
         # Vytvori 15 figurek/kamenu pro hrace 1
@@ -255,8 +255,8 @@ class Board():
 
         averageTTL_player1 = self.player1.allFinishedPieces.getHistoryAverage()
         averageTTL_player2 = self.player2.allFinishedPieces.getHistoryAverage()
-        print(Fore.RED + f'Player 1 average TTL: {averageTTL_player1}' + Style.RESET_ALL)
-        print(Fore.BLUE + f'Player 2 average TTL: {averageTTL_player2}' + Style.RESET_ALL)
+        print(Fore.RED + f'{board.player1.name} average stone hops: {averageTTL_player1}' + Style.RESET_ALL)
+        print(Fore.BLUE + f'{board.player2.name} average stone hops: {averageTTL_player2}' + Style.RESET_ALL)
 
 
         # print(f'Player 1 average TTL: {averageTTL_player1/len(self.player1.FinishedPieces)}')
@@ -296,13 +296,28 @@ class Board():
 
         #? Tohle bude finalni konecný stav hry check
         if self.player1.FinishedPieces == 15:
-            print(Fore.YELLOW + 'Player 1 has won!' + Style.RESET_ALL)
+            print(Fore.YELLOW + f'{board.player1.name} has won!' + Style.RESET_ALL)
         else:
-            print(Fore.YELLOW + 'Player 2 has won!' + Style.RESET_ALL)
+            print(Fore.YELLOW + f'{board.player2.name} has won!' + Style.RESET_ALL)
 
         self.getStats()
+    
 
-board = Board(Player('Petr', 1), Player('Jirka', 2))
+
+
+
+
+#! Start of the game
+
+
+player1 = input('Player 1 name: ')
+opponentType = input('Do you wish to play against AI? (yes/no): ')
+if opponentType == 'yes':
+    player2 = 'AI'
+else:
+    player2 = input('Player 2 name: ')
+
+board = Board(Player(player1, 1), Player(player2, 2))
 
 board.main()
 

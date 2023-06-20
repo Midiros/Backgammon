@@ -4,6 +4,7 @@ from stone import Stone
 from bar import Bar
 from spike import Spike
 from stack import Stack
+from random import randint
 from colorama import Fore, Back, Style
 
 class Player():
@@ -20,6 +21,9 @@ class Player():
         self.diceValues = []
         self.FinishedPieces = 0
         self.allFinishedPieces = Stack()
+        self.AIstate = False
+        if self.name == 'AI':
+            self.AIstate = True
     
     def clear(self):
         clear = os.system('cls' if os.name=='nt' else 'clear')
@@ -51,6 +55,9 @@ class Player():
     
 #! Vraci index move, ktery se ma provest v listu moves
     def choose_move(self, moves):
+        if self.AIstate == True:
+            move = randint(1, len(moves))
+            return int(move - 1)
         print(Fore.LIGHTCYAN_EX + f'You have {len(moves)} possible moves' + Style.RESET_ALL)
         if self.player_number == 1:
             print(Fore.YELLOW + f'{moves}'+ Style.RESET_ALL)
