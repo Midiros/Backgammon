@@ -1,7 +1,8 @@
 import random
 import os
-
+import json
 from colorama import Fore, Back, Style
+
 from stone import Stone
 from dice import Dice
 from player import Player
@@ -22,7 +23,7 @@ class Board():
 
 
 
-    #! DEFAULT STARTER POSITIONS
+    # ! DEFAULT STARTER POSITIONS
         # player1_starter_positions = [0, 11, 16, 18]
         player1_starter_positions = {   0: 2,
                                         11: 5,
@@ -33,7 +34,7 @@ class Board():
                                         7: 3,
                                         12: 5,
                                         23: 2}
-        
+
 
     #! BEAR OFF STARTER POSITIONS
         # # player1_starter_positions = [0, 11, 16, 18]
@@ -48,20 +49,25 @@ class Board():
         #                                 23: 5}
 
 
-        # Vytvori 15 figurek/kamenu pro hrace 1
-        index = 0
-        for key, value in player1_starter_positions.items():
-            for counter in range(value):
-                self.player1.pieces.append(Stone(self.player1.player_number, index, int(key), self.player1.name))
-                self.spikes[int(key)].push(self.player1.pieces[index])  
-                index += 1
-        # Vytvori 15 figurek/kamenu pro hrace 2
-        index = 0
-        for key, value in player2_starter_positions.items():
-            for counter in range(value):
-                self.player2.pieces.append(Stone(self.player2.player_number, index, int(key), self.player2.name))    
-                self.spikes[int(key)].push(self.player2.pieces[index])  
-                index += 1
+
+
+        #! Pokud nejsou jeste vytvoreny figury/kameny, vytvori je
+        #! Pro pripad load/continue hry z minulosti
+        if self.player1.pieces == [] and self.player2.pieces == []:
+            # Vytvori 15 figurek/kamenu pro hrace 1
+            index = 0
+            for key, value in player1_starter_positions.items():
+                for counter in range(value):
+                    self.player1.pieces.append(Stone(self.player1.player_number, index, int(key), self.player1.name))
+                    self.spikes[int(key)].push(self.player1.pieces[index])  
+                    index += 1
+            # Vytvori 15 figurek/kamenu pro hrace 2
+            index = 0
+            for key, value in player2_starter_positions.items():
+                for counter in range(value):
+                    self.player2.pieces.append(Stone(self.player2.player_number, index, int(key), self.player2.name))    
+                    self.spikes[int(key)].push(self.player2.pieces[index])  
+                    index += 1
 
         self.pieces_X = self.player1.pieces
         self.pieces_in_X = self.pieces_X
@@ -73,6 +79,38 @@ class Board():
         self.bottom_spikes_indexes = [12,11,10,9,8,7,'BAR',6,5,4,3,2,1]
         self.top_spikes = [12,13,14,15,16,17,'BAR',18,19,20,21,22,23]
         self.bottom_spikes = [11,10,9,8,7,6,'BAR',5,4,3,2,1,0]
+
+
+#! Metoda pro ukladani stavu hry do JSON souboru
+    def save_game(self):
+        gameData = {
+            player1_name: {
+                'pieces': {},
+                'allFinishedPieces': {},
+                'stats': {}
+            },
+            player2_name: {
+                'pieces': {},
+                'allFinishedPieces': {},
+                'stats': {}
+            },
+        }
+
+        for piece in self.player1.pieces:
+            gameData[player1_name]['pieces'][piece.stone_index] = {'player_number': piece.player_number, 'index': piece.stone_index, 'position': piece.position, 'name': piece.player_name, 'history': piece.history}
+
+        for piece in self.player2.pieces:
+            gameData[player2_name]['pieces'][piece.stone_index] = {'player_number': piece.player_number, 'index': piece.stone_index, 'position': piece.position, 'name': piece.player_name, 'history': piece.history}
+
+
+        gameData[player1_name]['stats'] = {'name': self.player1.name, 'player_number': self.player1.player_number, 'finishedPieces': self.player1.FinishedPieces}
+        gameData[player2_name]['stats'] = {'name': self.player2.name, 'player_number': self.player2.player_number, 'finishedPieces': self.player2.FinishedPieces}
+
+        with open('saveGame.json', 'w') as saveFile:
+            json.dump(gameData, saveFile, indent=4)
+            saveFile.close()
+
+
 
 #! Metoda pro clearovani CLI
     def clear(self):
@@ -192,14 +230,6 @@ class Board():
         print(Fore.GREEN + '|   |' + Style.RESET_ALL, end='')
 
 
-    #TODO   
-    def load_state():
-        pass
-
-    #TODO   
-    def save_state():
-        pass
-
 #!Bere startovni spike, cilovy spike a hrace a podle toho jestli je na cilovem spike nejaky kamen protihrace, tak ho bud vyhodi na bar a nebo presune svuj kamen 
     def movePiece(self, player, originSpike, targetSpike):
         if player == 1:
@@ -312,14 +342,14 @@ class Board():
 #! Start of the game
 
 
-player1 = input('Player 1 name: ')
+player1_name = input('Player 1 name: ')
 opponentType = input('Do you wish to play against AI? (yes/no): ')
 if opponentType == 'yes':
-    player2 = 'AI'
+    player2_name = 'AI'
 else:
-    player2 = input('Player 2 name: ')
+    player2_name = input('Player 2 name: ')
 
-board = Board(Player(player1, 1), Player(player2, 2))
+board = Board(Player(player1_name, 1), Player(player2_name, 2))
 
 board.main()
 

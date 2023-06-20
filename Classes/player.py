@@ -38,7 +38,7 @@ class Player():
     def add_piece_to_bar(self, stone):
         self.bar.add_to_bar(stone)
         print(Fore.CYAN + f'Kicked {stone}'+ Fore.CYAN + ' from board to opponents bar' + Style.RESET_ALL)
-        stone.add_to_history(-1)
+        stone.add_to_history('BAR')
     
     def list_pieces(self):
         for piece in self.pieces:
@@ -54,7 +54,7 @@ class Player():
         return self.name
     
 #! Vraci index move, ktery se ma provest v listu moves
-    def choose_move(self, moves):
+    def choose_move(self, moves, board):
         if self.AIstate == True:
             move = randint(1, len(moves))
             return int(move - 1)
@@ -65,19 +65,24 @@ class Player():
             print(Fore.YELLOW + f'{moves[::-1]}'+ Style.RESET_ALL)
 
         while True:
-            try:
-                move = int(input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL))
-            except ValueError:
-                print('Invalid input')
-                continue
-            if move < 0 or move > len(moves):
-                print('Non-existent move')
-                continue
+            moveSelected = input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL)
+            if moveSelected == 'save':
+                board.save_game()
+                exit()
             else:
-                break
+                try:
+                    moveSelected = int(moveSelected)
+                except ValueError:
+                    print('Invalid input, try again or type "save" to save the game')
+                    continue
+                if moveSelected < 0 or moveSelected > len(moves):
+                    print('Non-existent move')
+                    continue
+                else:
+                    break
         self.clear()
         print(Fore.MAGENTA + '---------------------------------------------------------')
-        return int(move - 1)
+        return int(moveSelected - 1)
 
 
 #! Vola funkci pro generovani vsech moznych tahu, da hraci na vyber a pak tah provede
@@ -92,12 +97,13 @@ class Player():
             if moves == []:
                 print('No possible moves')
                 break
-            move = self.choose_move(moves)
+            move = self.choose_move(moves,board)
 
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
             if moves[move][1] == 'FINISH':
                 finPiece = board.spikes[moves[move][0]-1].pop()
+                finPiece.add_to_history('FINISH')
                 self.allFinishedPieces.push(finPiece)
                 diceToUse = moves[move][2]
                 self.FinishedPieces += 1
@@ -136,13 +142,14 @@ class Player():
                 print('No possible moves')
                 self.diceValues = []
                 break
-            move = self.choose_move(moves[::-1])
+            move = self.choose_move(moves[::-1], board)
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
             
 
             if moves[move][1] == 'FINISH':
                 finPiece = board.spikes[moves[move][0]-1].pop()
+                finPiece.add_to_history('FINISH')
                 self.allFinishedPieces.push(finPiece)
                 diceToUse = moves[move][2]
                 self.FinishedPieces += 1
