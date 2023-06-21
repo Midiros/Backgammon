@@ -367,19 +367,11 @@ class Board():
                 self.playerOnTurn = 0
 
         #? Tohle je prozatimni konecny stav hry check
-        #! Čti tak že v moment kdy hráč má všechny svoje kameny na homeboardu -> nelze mu vygenerovat platne tahy
-        #! Teda hra skončí v nekonečné smyčce
 
-
-
-        #? Tohle bude finalni konecný stav hry check
-        # if self.player1.FinishedPieces == len(self.player1.pieces):
-        #     print(Fore.RED + f'{board.player1.name}'+ Fore.YELLOW +' has won!' + Style.RESET_ALL)
-        # else:
-        #     print(Fore.BLUE + f'{board.player2.name}' + Fore.YELLOW + ' has won!' + Style.RESET_ALL)
+    #! Method for checking who won and what type of win
         self.typeOfWin()
 
-        print(Fore.GREEN + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' + Style.RESET_ALL)\
+        print(Fore.GREEN + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' + Style.RESET_ALL)
         
         self.getStats()
         if os.path.isfile('../assets/saveGame.json'):
@@ -404,7 +396,6 @@ def loadGame():
         board.player2.FinishedPieces = gameData['player2']['stats']['finishedPieces']
         for piece in gameData['player1']['pieces']:
             kamen = Stone(gameData['player1']['pieces'][piece]['player_number'], gameData['player1']['pieces'][piece]['index'], gameData['player1']['pieces'][piece]['position'], gameData['player1']['pieces'][piece]['name'])
-            # print(gameData['player1']['pieces'][piece])
             board.player1.pieces.append(kamen)
             board.player1.pieces[int(piece)].history = gameData['player1']['pieces'][piece]['history']
             if kamen.position == 'BAR':
@@ -418,7 +409,6 @@ def loadGame():
         
         for piece in gameData['player2']['pieces']:
             kamen = Stone(gameData['player2']['pieces'][piece]['player_number'], gameData['player2']['pieces'][piece]['index'], gameData['player2']['pieces'][piece]['position'], gameData['player2']['pieces'][piece]['name'])
-            # print(gameData['player2']['pieces'][piece])
             board.player2.pieces.append(kamen)
             board.player2.pieces[int(piece)].history = gameData['player2']['pieces'][piece]['history']
             if kamen.position == 'BAR':
