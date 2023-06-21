@@ -16,6 +16,7 @@ class Board():
         self.player2 = player2
         self.dice = Dice()
         self.spikes = []
+        # place holder for player on turn
         self.playerOnTurn = 15
 
         # Vytvori 24 poli pro hraci desku
@@ -25,29 +26,34 @@ class Board():
 
 
     # ! DEFAULT STARTER POSITIONS
-        # # player1_starter_positions = [0, 11, 16, 18]
-        # player1_starter_positions = {   0: 2,
-        #                                 11: 5,
-        #                                 16: 3, 
-        #                                 18: 5}
-        # # player2_starter_positions = [5, 7, 12, 23]
-        # player2_starter_positions = {   5: 5,
-        #                                 7: 3,
-        #                                 12: 5,
-        #                                 23: 2}
+        # player1_starter_positions = [0, 11, 16, 18]
+        player1_starter_positions = {   0: 2,
+                                        11: 5,
+                                        16: 3, 
+                                        18: 5}
+        # player2_starter_positions = [5, 7, 12, 23]
+        player2_starter_positions = {   5: 5,
+                                        7: 3,
+                                        12: 5,
+                                        23: 2}
 
 
     #! BEAR OFF STARTER POSITIONS
-        # player1_starter_positions = [0, 11, 16, 18]
-        player2_starter_positions = {   0: 5,
-                                        1: 5,
-                                        2: 3, 
-                                        6: 2}
-        # player2_starter_positions = [5, 7, 12, 23]
-        player1_starter_positions = {   17: 2,
-                                        21: 3,
-                                        22: 5,
-                                        23: 5}
+        # # player1_starter_positions = [0, 11, 16, 18]
+        # player2_starter_positions = {   0: 5,
+        #                                 1: 5,
+        #                                 2: 3, 
+        #                                 6: 2}
+        # # player2_starter_positions = [5, 7, 12, 23]
+        # player1_starter_positions = {   17: 2,
+        #                                 21: 3,
+        #                                 22: 5,
+        #                                 23: 5}
+
+
+    #! FINISH GAME TEST POSITIONS
+        # player2_starter_positions = {   3: 2}
+        # player1_starter_positions = {   20: 2}
 
 
 
@@ -105,8 +111,8 @@ class Board():
             gameData['player2']['pieces'][piece.stone_index] = {'player_number': piece.player_number, 'index': piece.stone_index, 'position': piece.position, 'name': piece.player_name, 'history': piece.history}
 
 
-        gameData['player1']['stats'] = {'name': self.player1.name, 'player_number': self.player1.player_number, 'finishedPieces': self.player1.FinishedPieces, 'diceValues': self.player1.diceValues}
-        gameData['player2']['stats'] = {'name': self.player2.name, 'player_number': self.player2.player_number, 'finishedPieces': self.player2.FinishedPieces, 'diceValues': self.player2.diceValues}
+        gameData['player1']['stats'] = {'name': self.player1.name, 'player_number': self.player1.player_number, 'finishedPieces': self.player1.FinishedPieces, 'diceValues': self.player1.diceValues, 'piecesSentToBar': self.player1.piecesSentToBar}
+        gameData['player2']['stats'] = {'name': self.player2.name, 'player_number': self.player2.player_number, 'finishedPieces': self.player2.FinishedPieces, 'diceValues': self.player2.diceValues, 'piecesSentToBar': self.player1.piecesSentToBar}
 
         # os.remove('../assets/saveGame.json')
 
@@ -263,11 +269,13 @@ class Board():
             # print(piece)
             piece.add_to_history('BAR')
             self.player1.add_piece_to_bar(piece)
+            piece.position = 'BAR'
         elif player == 2 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
             # print(piece)
             piece.add_to_history('BAR')
             self.player2.add_piece_to_bar(piece)
+            piece.position = 'BAR'
 
     def bearOffState(self, player):
         if player == 1:
@@ -291,8 +299,12 @@ class Board():
 
         averageTTL_player1 = self.player1.allFinishedPieces.getHistoryAverage()
         averageTTL_player2 = self.player2.allFinishedPieces.getHistoryAverage()
-        print(Fore.RED + f'{board.player1.name} average stone hops: {averageTTL_player1}' + Style.RESET_ALL)
-        print(Fore.BLUE + f'{board.player2.name} average stone hops: {averageTTL_player2}' + Style.RESET_ALL)
+        print(Fore.RED + f'{board.player1.name} ~ average stone hops before reaching finish: {averageTTL_player1}' + Style.RESET_ALL)
+        print(Fore.RED + f'{board.player1.name} ~ amount of pieces finished: {board.player1.FinishedPieces}' + Style.RESET_ALL)
+        print(Fore.RED + f'{board.player1.name} ~ amount of enemy stones u kicked to bar: {self.player1.piecesSentToBar}' + Style.RESET_ALL)
+        print(Fore.BLUE + f'{board.player2.name} ~ average stone hops before reaching finish: {averageTTL_player2}' + Style.RESET_ALL)
+        print(Fore.BLUE + f'{board.player2.name} ~ amount of pieces finished: {board.player2.FinishedPieces}' + Style.RESET_ALL)
+        print(Fore.BLUE + f'{board.player2.name} ~ amount of enemy stones u kicked to bar: {self.player2.piecesSentToBar}' + Style.RESET_ALL)
 
 
         # print(f'Player 1 average TTL: {averageTTL_player1/len(self.player1.FinishedPieces)}')
@@ -302,7 +314,7 @@ class Board():
     def main(self):
         self.clear()
         if self.playerOnTurn == 0 or self.playerOnTurn == 1:
-            print('Continuing game')
+            print(Fore.CYAN + 'Continuing game' + Style.RESET_ALL)
         else:
             startingDice = self.dice.whoStarts()
             if startingDice[0] > startingDice[1]:
@@ -312,7 +324,7 @@ class Board():
                 self.player2.diceValues = startingDice
                 self.playerOnTurn = 1
         self.display_board()
-        while (self.player1.FinishedPieces < 15) and (self.player2.FinishedPieces < 15):
+        while (self.player1.FinishedPieces < len(self.player1.pieces)) and (self.player2.FinishedPieces < len(self.player2.pieces)):
             if self.playerOnTurn == 0:
                 self.player1.bareState = self.bearOffState(1)
                 print(Fore.RED + f'Player {self.player1.name} is on turn | X | 1' + Style.RESET_ALL)
@@ -335,14 +347,19 @@ class Board():
 
 
         #? Tohle bude finalni konecný stav hry check
-        if self.player1.FinishedPieces == 15:
-            print(Fore.YELLOW + f'{board.player1.name} has won!' + Style.RESET_ALL)
+        if self.player1.FinishedPieces == len(self.player1.pieces):
+            print(Fore.RED + f'{board.player1.name}'+ Fore.YELLOW +' has won!' + Style.RESET_ALL)
         else:
-            print(Fore.YELLOW + f'{board.player2.name} has won!' + Style.RESET_ALL)
+            print(Fore.BLUE + f'{board.player2.name}' + Fore.YELLOW + ' has won!' + Style.RESET_ALL)
 
+        print(Fore.GREEN + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' + Style.RESET_ALL)\
+        
         self.getStats()
-        os.remove('../assets/saveGame.json')
+        if os.path.isfile('../assets/saveGame.json'):
+            os.remove('../assets/saveGame.json')
 
+
+#! Function for loading the save file
 def loadGame():
     with open('../assets/saveGame.json', 'r') as saveFile:
         gameData = json.load(saveFile)
@@ -350,6 +367,9 @@ def loadGame():
         board.player1.pieces = []
         board.player2.pieces = []
         board.spikes = []
+        board.player1.diceValues = gameData['player1']['stats']['diceValues']
+        board.player2.diceValues = gameData['player2']['stats']['diceValues']
+
         for i in range(24):
             board.spikes.append(Spike(i))
         board.player1.FinishedPieces = gameData['player1']['stats']['finishedPieces']
@@ -389,31 +409,28 @@ def loadGame():
 
 #! Start of the game
 
-# saveFile = '../assets/saveGame.json'
-
-
 if os.path.isfile('../assets/saveGame.json'):
-    continueGame = input('Do you wish to load saved game? (yes/no): ')
+    continueGame = input(Fore.CYAN + 'Do you wish to load saved game? (yes/no): ' + Style.RESET_ALL)
     if continueGame == 'yes':
-        print('Loading saved game...')
+        print(Fore.CYAN + 'Loading saved game...' + Style.RESET_ALL)
         board = loadGame()
         board.clear()
         board.display_board()
     else:
-        player1_name = input('Player 1 name: ')
-        opponentType = input('Do you wish to play against AI? (yes/no): ')
+        player1_name = input(Fore.RED + 'Player 1 name: ' + Style.RESET_ALL)
+        opponentType = input(Fore.CYAN +'Do you wish to play against AI? (yes/no): ' + Style.RESET_ALL)
         if opponentType == 'yes':
             player2_name = 'AI'
         else:
-            player2_name = input('Player 2 name: ')
+            player2_name = input(Fore.BLUE + 'Player 2 name: ' + Style.RESET_ALL)
         board = Board(Player(player1_name, 1), Player(player2_name, 2))
 else:
-    player1_name = input('Player 1 name: ')
-    opponentType = input('Do you wish to play against AI? (yes/no): ')
+    player1_name = input(Fore.RED + 'Player 1 name: ' + Style.RESET_ALL)
+    opponentType = input(Fore.CYAN + 'Do you wish to play against AI? (yes/no): ' + Style.RESET_ALL)
     if opponentType == 'yes':
         player2_name = 'AI'
     else:
-        player2_name = input('Player 2 name: ')
+        player2_name = input(Fore.BLUE + 'Player 2 name: ' + Style.RESET_ALL)
     board = Board(Player(player1_name, 1), Player(player2_name, 2))
 
 

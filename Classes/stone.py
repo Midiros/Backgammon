@@ -46,5 +46,8 @@ class Stone():
         self.history.append(position)
 
     def __str__(self):
-        return (Fore.LIGHTYELLOW_EX + 'Stone on spike: ' + str(self.position+1) + ' owned by player: ' + str(self.player_name) + Style.RESET_ALL)
+        if self.position == 'BAR':
+            return (Fore.LIGHTYELLOW_EX + 'Stone on bar owned by player: ' + str(self.player_name) + Style.RESET_ALL)
+        else:
+            return (Fore.LIGHTYELLOW_EX + 'Stone on spike: ' + str(self.position+1) + ' owned by player: ' + str(self.player_name) + Style.RESET_ALL)
     

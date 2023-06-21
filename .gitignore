@@ -9,6 +9,7 @@ hold.ipynb
 README.md
 LICENSE
 roadmap.txt
+saveGame.json
 
 # C extensions
 *.so

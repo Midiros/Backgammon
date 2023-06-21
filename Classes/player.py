@@ -19,6 +19,7 @@ class Player():
         self.pieces = []
         self.bar = Bar()
         self.diceValues = []
+        self.piecesSentToBar = 0
         self.FinishedPieces = 0
         self.allFinishedPieces = Stack()
         self.AIstate = False
@@ -38,7 +39,8 @@ class Player():
     def add_piece_to_bar(self, stone):
         self.bar.add_to_bar(stone)
         print(Fore.CYAN + f'Kicked {stone}'+ Fore.CYAN + ' from board to opponents bar' + Style.RESET_ALL)
-    
+        self.piecesSentToBar += 1
+
     def list_pieces(self):
         for piece in self.pieces:
             print(piece)
@@ -68,6 +70,14 @@ class Player():
             if moveSelected == 'save':
                 board.save_game()
                 exit()
+            elif moveSelected == 'exit':
+                confirmExit = input(Fore.CYAN + 'Before you leave, do you want to save the game ? (yes/no) ? : ' + Style.RESET_ALL)
+                if confirmExit == 'yes':
+                    board.save_game()
+                    exit()
+                else:
+                    exit()
+
             else:
                 try:
                     moveSelected = int(moveSelected)
@@ -159,6 +169,7 @@ class Player():
                 diceToUse = 25 - moves[move][1] # 25 is the bar
                 #! MINUS JEDNA KVULI INDEXOVANI OD 0 A PRINTENI OD INDEXU 1
                 piece = self.bar.pop_from_bar()
+                piece.position = moves[move][1]-1
                 if board.spikes[moves[move][1]-1].owner() == 1:
                     board.addToBar(1, moves[move][1]-1)
                 board.spikes[moves[move][1]-1].push(piece)
