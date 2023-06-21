@@ -25,7 +25,8 @@ class Player():
         self.AIstate = False
         if self.name == 'AI':
             self.AIstate = True
-    
+
+#! Cisteni konzole    
     def clear(self):
         clear = os.system('cls' if os.name=='nt' else 'clear')
 
@@ -44,12 +45,7 @@ class Player():
     def list_pieces(self):
         for piece in self.pieces:
             print(piece)
-    
-    def my_score(self):
-        return self.score
-    
-    def my_pieces(self):
-        return self.pieces
+
     
     def __str__(self):
         return self.name
@@ -64,7 +60,7 @@ class Player():
             print(Fore.YELLOW + f'{moves}'+ Style.RESET_ALL)
         else:
             print(Fore.YELLOW + f'{moves[::-1]}'+ Style.RESET_ALL)
-
+#! Pripad ze uzivatel chce ulozit hru nebo ukoncit hru
         while True:
             moveSelected = input(Fore.LIGHTCYAN_EX + 'Choose your move: ' + Style.RESET_ALL)
             if moveSelected == 'save':
@@ -161,7 +157,7 @@ class Player():
             print(Fore.MAGENTA + f'Moving a piece from spike : {moves[move][0]}' + Style.RESET_ALL)
             print(Fore.MAGENTA + f'To spike : {moves[move][1]}' + Style.RESET_ALL)
             
-
+            #! Specifikace chovani v pripade ze cilova pozice je Finish nebo Bar
             if moves[move][1] == 'FINISH':
                 finPiece = board.spikes[moves[move][0]-1].pop()
                 finPiece.add_to_history('FINISH')
@@ -242,7 +238,7 @@ class Player():
                                 moves.append(('BAR', spike + 1))
             return moves
 
-        #!TODO NOT FUNCTIONAL
+        #! Vraci vsechny mozne tahy, ktere muzou byt provedeny na stealable spikes
         for spike in spikesInControl:
             for dice in currentDiceRolls:
                 if spike.my_index() + dice < 24:
@@ -271,7 +267,7 @@ class Player():
                                 moves.append(('BAR', spike + 1))
             return moves
         
-        #!TODO NOT FUNCTIONAL
+        #! Vraci vsechny mozne tahy, ktere muzou byt provedeny na stealable spikes
         for spike in spikesInControl:
             for dice in currentDiceRolls:
                 if spike.my_index() - dice >= 0:

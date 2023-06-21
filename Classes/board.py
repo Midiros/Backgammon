@@ -26,16 +26,16 @@ class Board():
 
 
     # ! DEFAULT STARTER POSITIONS
-        # # player1_starter_positions = [0, 11, 16, 18]
-        # player1_starter_positions = {   0: 2,
-        #                                 11: 5,
-        #                                 16: 3, 
-        #                                 18: 5}
-        # # player2_starter_positions = [5, 7, 12, 23]
-        # player2_starter_positions = {   5: 5,
-        #                                 7: 3,
-        #                                 12: 5,
-        #                                 23: 2}
+        # player1_starter_positions = [0, 11, 16, 18]
+        player1_starter_positions = {   0: 2,
+                                        11: 5,
+                                        16: 3, 
+                                        18: 5}
+        # player2_starter_positions = [5, 7, 12, 23]
+        player2_starter_positions = {   5: 5,
+                                        7: 3,
+                                        12: 5,
+                                        23: 2}
 
 
     #! BEAR OFF STARTER POSITIONS
@@ -52,14 +52,14 @@ class Board():
 
 
     #! FINISH GAME TEST POSITIONS
-        player2_starter_positions = {   3: 2,
-                                        4: 2,
-                                        5: 2,}
-        player1_starter_positions = {   20: 2,
-                                        21: 2,
-                                        22: 2,
-                                        23: 2,
-                                        8: 2}
+        # player2_starter_positions = {   3: 2,
+        #                                 4: 2,
+        #                                 5: 2,}
+        # player1_starter_positions = {   20: 2,
+        #                                 21: 2,
+        #                                 22: 2,
+        #                                 23: 2,
+        #                                 8: 2}
 
 
 
@@ -67,14 +67,14 @@ class Board():
         #! Pokud nejsou jeste vytvoreny figury/kameny, vytvori je
         #! Pro pripad load/continue hry z minulosti
         if self.player1.pieces == [] and self.player2.pieces == []:
-            # Vytvori 15 figurek/kamenu pro hrace 1
+            #! Vytvori 15 figurek/kamenu pro hrace 1
             index = 0
             for key, value in player1_starter_positions.items():
                 for counter in range(value):
                     self.player1.pieces.append(Stone(self.player1.player_number, index, int(key), self.player1.name))
                     self.spikes[int(key)].push(self.player1.pieces[index])  
                     index += 1
-            # Vytvori 15 figurek/kamenu pro hrace 2
+            #! Vytvori 15 figurek/kamenu pro hrace 2
             index = 0
             for key, value in player2_starter_positions.items():
                 for counter in range(value):
@@ -82,16 +82,10 @@ class Board():
                     self.spikes[int(key)].push(self.player2.pieces[index])  
                     index += 1
 
-
-        #!not neeeded ?
-        # self.pieces_X = self.player1.pieces
-        # self.pieces_in_X = self.pieces_X
-        # self.pieces_out_X = []
-        # self.pieces_Y = self.player2.pieces
-        # self.pieces_in_Y = self.pieces_Y
-        # self.pieces_out_Y = []
+        #! Display indexy 
         self.top_spikes_indexes = [13,14,15,16,17,18,'BAR',19,20,21,22,23,24]
         self.bottom_spikes_indexes = [12,11,10,9,8,7,'BAR',6,5,4,3,2,1]
+        #! Value indexy -> proto obcas -1/+1
         self.top_spikes = [12,13,14,15,16,17,'BAR',18,19,20,21,22,23]
         self.bottom_spikes = [11,10,9,8,7,6,'BAR',5,4,3,2,1,0]
 
@@ -142,19 +136,8 @@ class Board():
         self.print_spike_indexes(self.bottom_spikes_indexes)
         self.print_border()
 
-#? Zatim WIP
-    def piece_moved_out(self, piece, player_number):
-        if(player_number == 1):
-            self.pieces_in.remove(piece)
-            self.pieces_out.append(piece)
-        else:
-            self.pieces_in_o.remove(piece)
-            self.pieces_out_o.append(piece)
 
-    def roll_dice(self):
-        self.dice.roll()
-        return self.dice.value
-
+#! Metoda pro printeni borderu hraci desky
     def print_border(self):
         print(Fore.GREEN + '|~~~~~~~~~~~~~~~~~~~~~~~~|~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~|' + Style.RESET_ALL)
 
@@ -219,6 +202,7 @@ class Board():
             print(Fore.GREEN + '  |' + Style.RESET_ALL)
 
 
+#! Vytiskne prostredni radku hraci desky
     def print_middle_bar_row(self):
         print(Fore.GREEN + '|                        |BAR|                          |' + Style.RESET_ALL)
     
@@ -233,11 +217,6 @@ class Board():
         for column in range(7, 13):
             print(f'{spikes_side[column]:>4}', end='')
         print(Fore.GREEN + '  |' + Style.RESET_ALL)
-
-
-
-
-    #TODO - PRIO - nefunguje barrovnai piecue a obcas se pokazi hrani piece ven z herniho pole ? Problem s delkou asi je potreba resit nejak pushovani a popovani
 
     def print_bar(self):
         print(Fore.GREEN + '|   |' + Style.RESET_ALL, end='')
@@ -268,20 +247,20 @@ class Board():
                 self.player2.move_piece(piece, targetSpike)
                 self.spikes[targetSpike].push(piece)
 
-    #? Argument -- player is number of player we are attacking 
+    #? Argument -- player is the number of player we are attacking 
     def addToBar(self, player, spike):
         if player == 1 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
             # print(piece)
             piece.add_to_history('BAR')
-            self.player1.add_piece_to_bar(piece)
             piece.position = 'BAR'
+            self.player1.add_piece_to_bar(piece)
         elif player == 2 and len(self.spikes[spike]) > 0:
             piece = self.spikes[spike].pop()
             # print(piece)
             piece.add_to_history('BAR')
-            self.player2.add_piece_to_bar(piece)
             piece.position = 'BAR'
+            self.player2.add_piece_to_bar(piece)
 
     def bearOffState(self, player):
         if player == 1:
@@ -298,10 +277,6 @@ class Board():
     def getStats(self):
         averageTTL_player1 = 0
         averageTTL_player2 = 0
-        # for piece in self.player1.allFinishedPieces:
-        #     averageTTL_player1 += len(piece.history)
-        # for piece in self.player2.allFinishedPieces:
-        #     averageTTL_player2 += len(piece.history)
 
         averageTTL_player1 = self.player1.allFinishedPieces.getHistoryAverage()
         averageTTL_player2 = self.player2.allFinishedPieces.getHistoryAverage()
@@ -313,8 +288,6 @@ class Board():
         print(Fore.BLUE + f'{board.player2.name} ~ amount of enemy stones u kicked to bar: {self.player2.piecesSentToBar}' + Style.RESET_ALL)
 
 
-        # print(f'Player 1 average TTL: {averageTTL_player1/len(self.player1.FinishedPieces)}')
-        # print(f'Player 2 average TTL: {averageTTL_player2/len(self.player2.FinishedPieces)}')
 
 #! Method for checking what type of win has been achieved gammon/backgammon/normal
     def typeOfWin(self):
@@ -332,9 +305,11 @@ class Board():
             print(Fore.RED + f'{board.player1.name} ~ wins DOUBLE the value of the stake' + Style.RESET_ALL)
         elif self.player1.FinishedPieces == len(self.player1.pieces):
             print(Fore.RED + f'{board.player1.name} ~ is the WINNER ~ Normal type of win' + Style.RESET_ALL)
+            print(Fore.RED + f'{board.player1.name} ~ wins the value of the stake' + Style.RESET_ALL)
         elif self.player2.FinishedPieces == len(self.player2.pieces):
             print(Fore.BLUE + f'{board.player2.name} ~ is the WINNER ~ Normal type of win' + Style.RESET_ALL)
-
+            print(Fore.RED + f'{board.player2.name} ~ wins the value of the stake' + Style.RESET_ALL)
+    
 
 #! Main game loop
     def main(self):
@@ -365,8 +340,6 @@ class Board():
                 self.player2.moveSetPlayer2(self.spikes, self)
                 self.display_board()
                 self.playerOnTurn = 0
-
-        #? Tohle je prozatimni konecny stav hry check
 
     #! Method for checking who won and what type of win
         self.typeOfWin()
@@ -446,11 +419,11 @@ if os.path.isfile('../assets/saveGame.json'):
                         break
                     elif opponentType == 'no':
                         player2_name = input(Fore.BLUE + 'Player 2 name: ' + Style.RESET_ALL)
-                        board = Board(Player(player1_name, 1), Player(player2_name, 2))
                         break
                     else:
                         print(Fore.CYAN + 'Please enter yes or no!' + Style.RESET_ALL)
                         continue
+                board = Board(Player(player1_name, 1), Player(player2_name, 2))
                 break
 else:
     player1_name = input(Fore.RED + 'Player 1 name: ' + Style.RESET_ALL)
@@ -465,9 +438,8 @@ else:
         else:
             print(Fore.CYAN + 'Please enter yes or no!' + Style.RESET_ALL)
             continue
-    
     board = Board(Player(player1_name, 1), Player(player2_name, 2))
-
+    
 
 
 board.main()
