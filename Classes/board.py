@@ -26,16 +26,16 @@ class Board():
 
 
     # ! DEFAULT STARTER POSITIONS
-        # player1_starter_positions = [0, 11, 16, 18]
-        player1_starter_positions = {   0: 2,
-                                        11: 5,
-                                        16: 3, 
-                                        18: 5}
-        # player2_starter_positions = [5, 7, 12, 23]
-        player2_starter_positions = {   5: 5,
-                                        7: 3,
-                                        12: 5,
-                                        23: 2}
+        # # player1_starter_positions = [0, 11, 16, 18]
+        # player1_starter_positions = {   0: 2,
+        #                                 11: 5,
+        #                                 16: 3, 
+        #                                 18: 5}
+        # # player2_starter_positions = [5, 7, 12, 23]
+        # player2_starter_positions = {   5: 5,
+        #                                 7: 3,
+        #                                 12: 5,
+        #                                 23: 2}
 
 
     #! BEAR OFF STARTER POSITIONS
@@ -52,8 +52,15 @@ class Board():
 
 
     #! FINISH GAME TEST POSITIONS
-        # player2_starter_positions = {   3: 2}
-        # player1_starter_positions = {   20: 2}
+        player2_starter_positions = {   3: 2,
+                                        4: 2,
+                                        5: 2,}
+        player1_starter_positions = {   20: 2,
+                                        21: 2,
+                                        22: 2,
+                                        23: 2,
+                                        5: 2,
+                                        8: 2}
 
 
 
@@ -310,6 +317,26 @@ class Board():
         # print(f'Player 1 average TTL: {averageTTL_player1/len(self.player1.FinishedPieces)}')
         # print(f'Player 2 average TTL: {averageTTL_player2/len(self.player2.FinishedPieces)}')
 
+#! Method for checking what type of win has been achieved gammon/backgammon/normal
+    def typeOfWin(self):
+        if len(self.player1.bar) > 0 or self.player1.bareState == False:
+            print(Fore.BLUE + f'{board.player2.name} ~ is the WINNER ~ Backgammon type of win' + Style.RESET_ALL)
+            print(Fore.BLUE + f'{board.player2.name} ~ wins TRIPLE the value of the stake' + Style.RESET_ALL)
+        elif len(self.player2.bar) > 0 or self.player2.bareState == False:
+            print(Fore.RED + f'{board.player1.name} ~ is the WINNER ~ Backgammon type of win' + Style.RESET_ALL)
+            print(Fore.RED + f'{board.player1.name} ~ wins TRIPLE the value of the stake' + Style.RESET_ALL)
+        elif self.player1.FinishedPieces == 0:
+            print(Fore.BLUE + f'{board.player2.name} ~ is the WINNER ~ Gammon type of win' + Style.RESET_ALL)
+            print(Fore.BLUE + f'{board.player2.name} ~ wins DOUBLE the value of the stake' + Style.RESET_ALL)
+        elif self.player2.FinishedPieces == 0:
+            print(Fore.RED + f'{board.player1.name} ~ is the WINNER ~ Gammon type of win' + Style.RESET_ALL)
+            print(Fore.RED + f'{board.player1.name} ~ wins DOUBLE the value of the stake' + Style.RESET_ALL)
+        elif self.player1.FinishedPieces == len(self.player1.pieces):
+            print(Fore.RED + f'{board.player1.name} ~ is the WINNER ~ Normal type of win' + Style.RESET_ALL)
+        elif self.player2.FinishedPieces == len(self.player2.pieces):
+            print(Fore.BLUE + f'{board.player2.name} ~ is the WINNER ~ Normal type of win' + Style.RESET_ALL)
+
+
 #! Main game loop
     def main(self):
         self.clear()
@@ -347,16 +374,18 @@ class Board():
 
 
         #? Tohle bude finalni konecný stav hry check
-        if self.player1.FinishedPieces == len(self.player1.pieces):
-            print(Fore.RED + f'{board.player1.name}'+ Fore.YELLOW +' has won!' + Style.RESET_ALL)
-        else:
-            print(Fore.BLUE + f'{board.player2.name}' + Fore.YELLOW + ' has won!' + Style.RESET_ALL)
+        # if self.player1.FinishedPieces == len(self.player1.pieces):
+        #     print(Fore.RED + f'{board.player1.name}'+ Fore.YELLOW +' has won!' + Style.RESET_ALL)
+        # else:
+        #     print(Fore.BLUE + f'{board.player2.name}' + Fore.YELLOW + ' has won!' + Style.RESET_ALL)
+        self.typeOfWin()
 
         print(Fore.GREEN + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' + Style.RESET_ALL)\
         
         self.getStats()
         if os.path.isfile('../assets/saveGame.json'):
             os.remove('../assets/saveGame.json')
+
 
 
 #! Function for loading the save file
