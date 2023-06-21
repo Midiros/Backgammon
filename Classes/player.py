@@ -71,12 +71,15 @@ class Player():
                 board.save_game()
                 exit()
             elif moveSelected == 'exit':
-                confirmExit = input(Fore.CYAN + 'Before you leave, do you want to save the game ? (yes/no) ? : ' + Style.RESET_ALL)
-                if confirmExit == 'yes':
-                    board.save_game()
-                    exit()
-                else:
-                    exit()
+                while True:
+                    confirmExit = input(Fore.CYAN + 'Before you leave, do you want to save the game ? (yes/no) ? : ' + Style.RESET_ALL)
+                    if confirmExit == 'yes':
+                        board.save_game()
+                        exit()
+                    if confirmExit == 'no':
+                        exit()
+                    else:
+                        print(Fore.CYAN + 'Please enter yes or no' + Style.RESET_ALL)
 
             else:
                 try:

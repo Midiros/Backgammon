@@ -59,7 +59,6 @@ class Board():
                                         21: 2,
                                         22: 2,
                                         23: 2,
-                                        5: 2,
                                         8: 2}
 
 
@@ -439,27 +438,44 @@ def loadGame():
 #! Start of the game
 
 if os.path.isfile('../assets/saveGame.json'):
-    continueGame = input(Fore.CYAN + 'Do you wish to load saved game? (yes/no): ' + Style.RESET_ALL)
-    if continueGame == 'yes':
-        print(Fore.CYAN + 'Loading saved game...' + Style.RESET_ALL)
-        board = loadGame()
-        board.clear()
-        board.display_board()
-    else:
-        player1_name = input(Fore.RED + 'Player 1 name: ' + Style.RESET_ALL)
-        opponentType = input(Fore.CYAN +'Do you wish to play against AI? (yes/no): ' + Style.RESET_ALL)
-        if opponentType == 'yes':
-            player2_name = 'AI'
-        else:
-            player2_name = input(Fore.BLUE + 'Player 2 name: ' + Style.RESET_ALL)
-        board = Board(Player(player1_name, 1), Player(player2_name, 2))
+    while True:
+        continueGame = input(Fore.CYAN + 'Do you wish to load saved game? (yes/no): ' + Style.RESET_ALL)
+        if continueGame == 'yes' or continueGame == 'no':
+            if continueGame == 'yes':
+                print(Fore.CYAN + 'Loading saved game...' + Style.RESET_ALL)
+                board = loadGame()
+                board.clear()
+                board.display_board()
+                break
+            elif continueGame == 'no':
+                player1_name = input(Fore.RED + 'Player 1 name: ' + Style.RESET_ALL)
+                opponentType = input(Fore.CYAN +'Do you wish to play against AI? (yes/no): ' + Style.RESET_ALL)
+                while True:
+                    if opponentType == 'yes':
+                        player2_name = 'AI'
+                        break
+                    elif opponentType == 'no':
+                        player2_name = input(Fore.BLUE + 'Player 2 name: ' + Style.RESET_ALL)
+                        board = Board(Player(player1_name, 1), Player(player2_name, 2))
+                        break
+                    else:
+                        print(Fore.CYAN + 'Please enter yes or no!' + Style.RESET_ALL)
+                        continue
+                break
 else:
     player1_name = input(Fore.RED + 'Player 1 name: ' + Style.RESET_ALL)
-    opponentType = input(Fore.CYAN + 'Do you wish to play against AI? (yes/no): ' + Style.RESET_ALL)
-    if opponentType == 'yes':
-        player2_name = 'AI'
-    else:
-        player2_name = input(Fore.BLUE + 'Player 2 name: ' + Style.RESET_ALL)
+    while True:
+        opponentType = input(Fore.CYAN + 'Do you wish to play against AI? (yes/no): ' + Style.RESET_ALL)
+        if opponentType == 'yes':
+            player2_name = 'AI'
+            break
+        elif opponentType == 'no':
+            player2_name = input(Fore.BLUE + 'Player 2 name: ' + Style.RESET_ALL)
+            break
+        else:
+            print(Fore.CYAN + 'Please enter yes or no!' + Style.RESET_ALL)
+            continue
+    
     board = Board(Player(player1_name, 1), Player(player2_name, 2))
 
 
