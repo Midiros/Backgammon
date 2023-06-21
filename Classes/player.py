@@ -104,6 +104,7 @@ class Player():
             self.diceValues = self.roll_dice()
         currentDiceRolls = self.diceValues
         print(Fore.LIGHTCYAN_EX + f'Current dice rolls: {currentDiceRolls}' + Style.RESET_ALL)
+        print(Fore.LIGHTCYAN_EX + f'Barred of : {self.FinishedPieces} pieces so far' + Style.RESET_ALL)
         while len(self.diceValues) > 0:
             moves = self.generateAllPossibleMovesPlayer1(spikes, currentDiceRolls)
             if moves == []:
@@ -149,6 +150,7 @@ class Player():
             self.diceValues = self.roll_dice()
         currentDiceRolls = self.diceValues
         print(Fore.LIGHTCYAN_EX+ f'Current dice rolls: {currentDiceRolls}' + Style.RESET_ALL)
+        print(Fore.LIGHTCYAN_EX + f'Barred of : {self.FinishedPieces} pieces so far' + Style.RESET_ALL)
         while len(self.diceValues) > 0:
             moves = self.generateAllPossibleMovesPlayer2(spikes, currentDiceRolls)
             if moves == []:
