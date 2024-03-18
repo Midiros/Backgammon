@@ -1,6 +1,10 @@
-# Project Title
+# Backgammon
 
-Project made for the course APR2 in the bachelor's degree study programme Applied informatics at [UJEP](https://ujep.cz)
+Project made for the course APR2 in the bachelor's degree study programme Applied informatics at [UJEP](https://ujep.cz).
+
+## Summary
+
+The project is the implementation of the boardgame Backgammon done solely in Python.
 
 ## Requirements
 
