@@ -14,8 +14,16 @@ The project is the implementation of the boardgame Backgammon done solely in Pyt
 ## Installation
 
 1. Clone the project to your machine.
-2. Run the main game loop in shell:
-
+   ```sh
+   git clone https://github.com/Midiros/Backgammon.git
+   ````
+2. Make a virtual environment, activate it and install all the neccesary libraries (colorama)
+   ```sh
+   python -m venv venv
+   .\venv\Scripts\Activate.ps1
+   pip install colorama
+   ```
+4. Run the main game loop in shell:
    ```sh
    cd Backgammon/Classes/
    py board.py
